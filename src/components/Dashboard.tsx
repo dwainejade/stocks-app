@@ -1,4 +1,5 @@
 import React from "react";
+import StockListItem from "./StockListItem";
 
 const StockDashboard: React.FC = () => {
   // Mock data for now
@@ -10,12 +11,7 @@ const StockDashboard: React.FC = () => {
       <div className="w-1/3 p-4 overflow-auto bg-grey-100">
         <ul>
           {stocks.map((stock, index) => (
-            <li
-              key={index}
-              className="p-2 hover:bg-gray-600 cursor-pointer rounded-md"
-            >
-              {stock}
-            </li>
+            <StockListItem key={index} symbol={stock} price={128} />
           ))}
         </ul>
       </div>
