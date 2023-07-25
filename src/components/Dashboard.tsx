@@ -1,19 +1,12 @@
 import React from "react";
-import StockListItem from "./StockListItem";
+import StockList from "./stock_list/StockList";
 
 const StockDashboard: React.FC = () => {
-  // Mock data for now
-  const stocks = ["AAPL", "GOOGL", "AMZN", "FB"];
-
   return (
     <div className="flex h-screen bg-gray-800 text-gray-50">
       {/* Left side with list of stocks */}
       <div className="w-1/3 p-4 overflow-auto bg-grey-100">
-        <ul>
-          {stocks.map((stock, index) => (
-            <StockListItem key={index} symbol={stock} price={128} />
-          ))}
-        </ul>
+        <StockList />
       </div>
 
       {/* Right side with chart and stock details */}
