@@ -1,6 +1,7 @@
 import React from "react";
 import StockList from "./stock_list/StockList";
 import DetailsHeader from "./stock_details/DetailsHeader";
+import Chart from "./stock_details/Chart";
 
 const StockDashboard: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const StockDashboard: React.FC = () => {
       {/* Right side with chart and stock details */}
       <div className="w-2/3 bg-gray-900 text-gray-50 p-4">
         <DetailsHeader />
+        <Chart />
       </div>
     </div>
   );
