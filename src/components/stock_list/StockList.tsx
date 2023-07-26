@@ -1,6 +1,6 @@
-import React from "react";
-import { mockListData } from "../../constants/mockData";
-import StockListItem from "./StockListItem"; // Replace with the actual path to StockListItem
+import React from 'react';
+import { mockListData } from '../../constants/mockData';
+import StockListItem from './StockListItem'; // Replace with the actual path to StockListItem
 
 interface StockItem {
   symbol: string;
@@ -18,7 +18,7 @@ const StockList: React.FC = () => {
   return (
     <div>
       {mockListData.map((stock: StockItem, index: number) => (
-        <div className="border-gray-500 cursor-pointer">
+        <div className="border-gray-500 cursor-pointer" key={index}>
           <StockListItem
             key={index}
             symbol={stock.symbol}

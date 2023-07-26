@@ -5,11 +5,11 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from "recharts";
-import mockData from "../../constants/msftMockData.json";
+} from 'recharts';
+import mockData from '../../constants/msftMockData.json';
 
 const transformedData = mockData.t.map((timestamp, index) => ({
-  date: new Date(timestamp * 1000).toISOString().split("T")[0], // Convert to date string
+  date: new Date(timestamp * 1000).toISOString().split('T')[0], // Convert to date string
   price: mockData.c[index],
 }));
 
@@ -17,7 +17,7 @@ const transformedData = mockData.t.map((timestamp, index) => ({
 
 const Chart = () => {
   return (
-    <div className="h-full w-full">
+    <div className="w-full">
       <AreaChart
         width={730}
         height={250}

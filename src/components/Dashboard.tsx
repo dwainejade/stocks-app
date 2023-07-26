@@ -1,7 +1,8 @@
-import React from "react";
-import StockList from "./stock_list/StockList";
-import DetailsHeader from "./stock_details/DetailsHeader";
-import Chart from "./stock_details/Chart";
+import React from 'react';
+import StockList from './stock_list/StockList';
+import DetailsHeader from './stock_details/DetailsHeader';
+import Chart from './stock_details/Chart';
+import StockInfo from './stock_details/StockInfo';
 
 const StockDashboard: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ const StockDashboard: React.FC = () => {
       <div className="w-2/3 bg-gray-900 text-gray-50 p-4">
         <DetailsHeader />
         <Chart />
+        <StockInfo />
       </div>
     </div>
   );
