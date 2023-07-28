@@ -1,11 +1,12 @@
-import * as React from 'react';
-import { StockItem, StocksContextType } from '../utils/interfaces';
-import { getUnixTimestamps } from '../utils/helpers';
+import * as React from "react";
+import { StockItem, StocksContextType } from "../utils/interfaces";
+import { getUnixTimestamps } from "../utils/helpers";
 
 export const StockContext = React.createContext<StocksContextType | null>(null);
 
 const StockProvider = ({ children }) => {
   const [stocks, setStocks] = React.useState<StockItem[] | []>([]);
+  const [symbol, setSymbol] = React.useState<string>("MSFT");
 
   //   const getStock = async (name: string) => {
   //     try {
@@ -27,7 +28,7 @@ const StockProvider = ({ children }) => {
   const getStock = async () => {
     try {
       const candlesResponse = await fetch(
-        ` https://finnhub.io/api/v1/stock/candle?symbol=MSFT&resolution=D&from=${
+        ` https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=D&from=${
           getUnixTimestamps(new Date()).oneYearAgo
         }&to=${getUnixTimestamps(new Date()).today}&token=${
           import.meta.env.VITE_APP_API_KEY
@@ -35,7 +36,7 @@ const StockProvider = ({ children }) => {
       );
 
       const quoteResponse = await fetch(
-        `https://finnhub.io/api/v1/quote?symbol=MSFT&token=${
+        `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${
           import.meta.env.VITE_APP_API_KEY
         }`
       );
@@ -51,7 +52,7 @@ const StockProvider = ({ children }) => {
       const quote = await quoteResponse.json();
       const candles = await candlesResponse.json();
 
-      setStocks([...stocks, { symbol: 'MSFT', quote, prices: candles.c }]);
+      setStocks([...stocks, { symbol, quote, prices: candles.c }]);
     } catch (error) {
       console.log(error);
       return error;
