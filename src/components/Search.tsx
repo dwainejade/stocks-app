@@ -28,7 +28,7 @@ const StockSearch = () => {
         value={inputValue}
         onChange={handleInputChange}
         placeholder="Search"
-        className="shadow appearance-none border rounded-2xl w-full py-2 pl-10 pr-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        className="border border-gray-400 rounded-2xl w-full py-2 pl-10 pr-10 text-gray-50  bg-gray-800 leading-tight focus:outline-none focus:shadow-outline"
       />
       <span
         className="absolute right-0 pr-2 text-gray-400 cursor-pointer"
