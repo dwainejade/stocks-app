@@ -6,7 +6,7 @@ export const StockContext = React.createContext<StocksContextType | null>(null);
 
 const StockProvider = ({ children }) => {
   const [stocks, setStocks] = React.useState<StockItem[] | []>([]);
-  const [symbol, setSymbol] = React.useState<string>("MSFT");
+  const [symbol, setSymbol] = React.useState<string>("AAPL");
 
   //   const getStock = async (name: string) => {
   //     try {
@@ -64,7 +64,7 @@ const StockProvider = ({ children }) => {
   }, []);
 
   return (
-    <StockContext.Provider value={{ stocks, getStock }}>
+    <StockContext.Provider value={{ stocks, getStock, setSymbol }}>
       {children}
     </StockContext.Provider>
   );
