@@ -10,6 +10,7 @@ export interface StockItem {
     pc: number;
     t: number;
   };
+  prices: number[];
 }
 
 export interface StocksContextType {
