@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   Area,
   AreaChart,
@@ -5,6 +6,7 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  ResponsiveContainer,
 } from "recharts";
 import mockData from "../../constants/msftMockData.json";
 
@@ -13,14 +15,20 @@ const transformedData = mockData.t.map((timestamp, index) => ({
   price: mockData.c[index],
 }));
 
-// Then use transformedData in your chart
-
 const Chart = () => {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener on unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <div className="h-full w-full">
+    <ResponsiveContainer width={windowWidth - 450} height={250}>
       <AreaChart
-        width={730}
-        height={250}
         data={transformedData}
         margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
       >
@@ -42,7 +50,7 @@ const Chart = () => {
           fill="url(#colorUv)"
         />
       </AreaChart>
-    </div>
+    </ResponsiveContainer>
   );
 };
 
