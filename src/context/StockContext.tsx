@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { StockItem, StocksContextType } from '../utils/interfaces';
+import { getUnixTimestamps } from '../utils/helpers';
 
 export const StockContext = React.createContext<StocksContextType | null>(null);
 
@@ -26,9 +27,9 @@ const StockProvider = ({ children }) => {
   const getStock = async () => {
     try {
       const candlesResponse = await fetch(
-        ` https://finnhub.io/api/v1/stock/candle?symbol=AAPL&resolution=1&from=${
-          Math.floor(Date.now() / 1000) - 3600 * 24 * 30
-        }&to=${Math.floor(Date.now() / 1000)}&token=${
+        ` https://finnhub.io/api/v1/stock/candle?symbol=MSFT&resolution=D&from=${
+          getUnixTimestamps(new Date()).oneYearAgo
+        }&to=${getUnixTimestamps(new Date()).today}&token=${
           import.meta.env.VITE_APP_API_KEY
         }`
       );
