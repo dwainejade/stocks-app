@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-// import { mockListData } from "../../constants/mockData";
-import StockListItem from "./StockListItem"; // Replace with the actual path to StockListItem
+import StockListItem from "./StockListItem";
 import { StockContext } from "../../context/StockContext";
+import { StocksContextType } from "../../utils/interfaces";
 
 interface StockItem {
   symbol: string;
@@ -16,7 +16,9 @@ interface StockItem {
 }
 
 const StockList: React.FC = () => {
-  const { favoriteStocks, symbol } = useContext(StockContext);
+  const { favoriteStocks, symbol } = useContext(
+    StockContext
+  ) as StocksContextType;
 
   return (
     <div>
