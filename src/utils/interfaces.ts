@@ -11,10 +11,11 @@ export interface StockItem {
     t: number;
   };
   prices: number[];
+  lastUpdated: number;
 }
 
 export interface StocksContextType {
-  stocks: StockItem[] | null;
+  stock: StockItem | null;
   getStock: (name?: string) => void;
   symbol: string;
   setSymbol: (symbol: string) => void;
