@@ -19,4 +19,6 @@ export interface StocksContextType {
   getStock: (name?: string) => void;
   symbol: string;
   setSymbol: (symbol: string) => void;
+  favoriteStocks: StockItem[];
+  setFavoriteStocks: (stocks: StockItem[]) => void;
 }
