@@ -14,6 +14,8 @@ export interface StockItem {
 }
 
 export interface StocksContextType {
-  stocks: StockItem[];
+  stocks: StockItem[] | null;
   getStock: (name?: string) => void;
+  symbol: string;
+  setSymbol: (symbol: string) => void;
 }
