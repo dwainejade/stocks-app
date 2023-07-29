@@ -61,7 +61,7 @@ const StockProvider = ({ children }) => {
 
   React.useEffect(() => {
     getStock();
-  }, []);
+  }, [symbol]);
 
   return (
     <StockContext.Provider value={{ stocks, getStock, setSymbol }}>
