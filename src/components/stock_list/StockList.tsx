@@ -1,6 +1,7 @@
-import React from "react";
-import { mockListData } from "../../constants/mockData";
+import React, { useContext } from "react";
+// import { mockListData } from "../../constants/mockData";
 import StockListItem from "./StockListItem"; // Replace with the actual path to StockListItem
+import { StockContext } from "../../context/StockContext";
 
 interface StockItem {
   symbol: string;
@@ -15,15 +16,13 @@ interface StockItem {
 }
 
 const StockList: React.FC = () => {
+  const { favoriteStocks } = useContext(StockContext);
+
   return (
     <div>
-      {mockListData.map((stock: StockItem, index: number) => (
-        <div className="border-gray-500 cursor-pointer">
-          <StockListItem
-            key={index}
-            symbol={stock.symbol}
-            price={stock.quote.c}
-          />
+      {favoriteStocks?.map((stock: StockItem, index: number) => (
+        <div key={index} className="border-gray-500 cursor-pointer">
+          <StockListItem symbol={stock?.symbol} price={stock?.quote.c} />
         </div>
       ))}
     </div>
