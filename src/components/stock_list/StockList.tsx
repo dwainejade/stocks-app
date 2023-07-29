@@ -16,12 +16,17 @@ interface StockItem {
 }
 
 const StockList: React.FC = () => {
-  const { favoriteStocks } = useContext(StockContext);
+  const { favoriteStocks, symbol } = useContext(StockContext);
 
   return (
     <div>
       {favoriteStocks?.map((stock: StockItem, index: number) => (
-        <div key={index} className="border-gray-500 cursor-pointer">
+        <div
+          key={index}
+          className={`border-gray-500 cursor-pointer ${
+            stock.symbol === symbol ? "bg-gray-700 rounded-md" : null
+          }`}
+        >
           <StockListItem symbol={stock?.symbol} price={stock?.quote.c} />
         </div>
       ))}
