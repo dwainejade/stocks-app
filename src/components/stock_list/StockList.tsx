@@ -25,7 +25,7 @@ const StockList: React.FC = () => {
       {favoriteStocks?.map((stock: StockItem, index: number) => (
         <div
           key={index}
-          className={`border-gray-500 cursor-pointer ${
+          className={`border-gray-500 cursor-pointer text-sm ${
             stock.symbol === symbol ? "bg-gray-700 rounded-md" : null
           }`}
         >
