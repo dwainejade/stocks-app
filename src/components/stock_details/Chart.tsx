@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useContext } from "react";
 import {
   Area,
   AreaChart,
@@ -5,23 +6,36 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts';
-import mockData from '../../constants/msftMockData.json';
-
-const transformedData = mockData.t.map((timestamp, index) => ({
-  date: new Date(timestamp * 1000).toISOString().split('T')[0], // Convert to date string
-  price: mockData.c[index],
-}));
-
-// Then use transformedData in your chart
+  ResponsiveContainer,
+} from "recharts";
+import { StockContext } from "../../context/StockContext";
+import { StocksContextType } from "../../utils/interfaces";
 
 const Chart = () => {
+  const { stock } = useContext(StockContext) as StocksContextType;
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener on unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const transformedPrices = stock?.prices.map((price, index) => ({
+    price,
+    date: new Date(
+      stock.lastUpdated - (stock.prices.length - index) * 24 * 60 * 60 * 1000
+    )
+      .toISOString()
+      .split("T")[0],
+  }));
+
   return (
-    <div className="w-full">
+    <ResponsiveContainer width={windowWidth - 450} height={250}>
       <AreaChart
-        width={730}
-        height={250}
-        data={transformedData}
+        data={transformedPrices}
         margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
       >
         <defs>
@@ -30,9 +44,9 @@ const Chart = () => {
             <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
           </linearGradient>
         </defs>
-        <XAxis dataKey="date" interval={1000} />
+        <XAxis dataKey="date" />
         <YAxis />
-        <CartesianGrid strokeDasharray="3 3" />
+        {/* <CartesianGrid strokeDasharray="3 3" /> */}
         <Tooltip />
         <Area
           type="monotone"
@@ -42,7 +56,7 @@ const Chart = () => {
           fill="url(#colorUv)"
         />
       </AreaChart>
-    </div>
+    </ResponsiveContainer>
   );
 };
 

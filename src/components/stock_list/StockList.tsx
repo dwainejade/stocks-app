@@ -1,6 +1,7 @@
-import React from 'react';
-import { mockListData } from '../../constants/mockData';
-import StockListItem from './StockListItem'; // Replace with the actual path to StockListItem
+import React, { useContext } from "react";
+import StockListItem from "./StockListItem";
+import { StockContext } from "../../context/StockContext";
+import { StocksContextType } from "../../utils/interfaces";
 
 interface StockItem {
   symbol: string;
@@ -15,15 +16,20 @@ interface StockItem {
 }
 
 const StockList: React.FC = () => {
+  const { favoriteStocks, symbol } = useContext(
+    StockContext
+  ) as StocksContextType;
+
   return (
     <div>
-      {mockListData.map((stock: StockItem, index: number) => (
-        <div className="border-gray-500 cursor-pointer" key={index}>
-          <StockListItem
-            key={index}
-            symbol={stock.symbol}
-            price={stock.quote.c}
-          />
+      {favoriteStocks?.map((stock: StockItem, index: number) => (
+        <div
+          key={index}
+          className={`border-gray-500 cursor-pointer ${
+            stock.symbol === symbol ? "bg-gray-700 rounded-md" : null
+          }`}
+        >
+          <StockListItem symbol={stock?.symbol} price={stock?.quote.c} />
         </div>
       ))}
     </div>
