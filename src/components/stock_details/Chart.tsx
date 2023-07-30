@@ -34,7 +34,11 @@ const Chart = () => {
 
   return (
     <ResponsiveContainer
-      width={windowWidth - 450 > 800 ? 800 : windowWidth - 450}
+      width={
+        Math.max(windowWidth - 330, 0) > 800
+          ? 800
+          : Math.max(windowWidth - 330, 0)
+      }
       height={250}
     >
       <AreaChart
