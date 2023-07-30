@@ -16,7 +16,9 @@ const DetailsHeader: React.FC = () => {
       </div>
       <div className="flex flex-col">
         <span>${stock?.quote.c.toFixed(2)}</span>
-        <span>
+        <span
+          className={` ${stock.quote.d > 0 ? "text-green-500" : "bg-red-500"}`}
+        >
           {stock?.quote.d > 0 ? "+" : "-"}
           {stock?.quote.d.toFixed(2)}
         </span>
