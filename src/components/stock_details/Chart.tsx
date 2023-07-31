@@ -31,23 +31,16 @@ const Chart = () => {
   const dateFormatter = (timestamp: string) => {
     if (selectedRange === '1Y') {
       return timestamp.split(' ')[0];
-      // return format(timestamp, 'MMM yy'); // Format: Jan 23
     } else if (selectedRange === '1M') {
       return timestamp
         .split(' ')[1]
         .slice(0, timestamp.split(' ')[1].length - 1);
-
-      // return format(timestamp, 'MMM d'); // Format: Jan 23
     } else if (selectedRange === '1W') {
       return timestamp
         .split(' ')[1]
         .slice(0, timestamp.split(' ')[1].length - 1);
-
-      // return format(timestamp, 'MMM d'); // Format: Jan 23
     } else if (selectedRange === '1D') {
       return timestamp.split(' ')[4].split(':')[0];
-
-      // return format(timestamp, 'HH:mm'); // Format: 23:59
     }
     return '';
   };
