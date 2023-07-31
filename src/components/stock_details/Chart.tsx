@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from 'react';
 import {
   Area,
   AreaChart,
@@ -6,9 +6,9 @@ import {
   XAxis,
   YAxis,
   ResponsiveContainer,
-} from "recharts";
-import { StockContext } from "../../context/StockContext";
-import { StocksContextType } from "../../utils/interfaces";
+} from 'recharts';
+import { StockContext } from '../../context/StockContext';
+import { StocksContextType, CustomTooltipProps } from '../../utils/interfaces';
 
 const Chart = () => {
   const { stock, ranges, selectedRange, setSelectedRange } = useContext(
@@ -18,14 +18,70 @@ const Chart = () => {
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     // Clean up the event listener on unmount
-    return () => window.removeEventListener("resize", handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const handleRangeChange = (range: string) => {
     setSelectedRange(range);
+  };
+
+  const dateFormatter = (timestamp: string) => {
+    if (selectedRange === '1Y') {
+      return timestamp.split(' ')[0];
+      // return format(timestamp, 'MMM yy'); // Format: Jan 23
+    } else if (selectedRange === '1M') {
+      return timestamp
+        .split(' ')[1]
+        .slice(0, timestamp.split(' ')[1].length - 1);
+
+      // return format(timestamp, 'MMM d'); // Format: Jan 23
+    } else if (selectedRange === '1W') {
+      return timestamp
+        .split(' ')[1]
+        .slice(0, timestamp.split(' ')[1].length - 1);
+
+      // return format(timestamp, 'MMM d'); // Format: Jan 23
+    } else if (selectedRange === '1D') {
+      return timestamp.split(' ')[4].split(':')[0];
+
+      // return format(timestamp, 'HH:mm'); // Format: 23:59
+    }
+    return '';
+  };
+
+  const renderCustomTooltip: React.FC<CustomTooltipProps> = ({
+    active,
+    payload,
+    label,
+  }) => {
+    if (active && payload && payload.length) {
+      const date = label;
+      const price = payload[0].value;
+
+      return (
+        <div
+          style={{
+            backgroundColor: '#f5f5f5',
+            padding: '10px',
+            border: '1px solid #ccc',
+          }}
+        >
+          {/* Black text for the date */}
+          <p
+            style={{ color: 'black', marginBottom: '5px' }}
+          >{`Date: ${date}`}</p>
+          {/* Purple text for the price */}
+          <p
+            style={{ color: 'purple', marginBottom: '0' }}
+          >{`Price: ${price}`}</p>
+        </div>
+      );
+    }
+
+    return null;
   };
 
   return (
@@ -35,7 +91,7 @@ const Chart = () => {
           <button
             key={range}
             className={`px-4 py-1 text-white rounded focus:ring-opacity-50 ${
-              selectedRange === range ? "bg-gray-700" : null
+              selectedRange === range ? 'bg-gray-700' : null
             }`}
             onClick={() => handleRangeChange(range)}
           >
@@ -57,7 +113,7 @@ const Chart = () => {
               <stop offset="95%" stopColor="#8884d8" stopOpacity={0.2} />
             </linearGradient>
           </defs>
-          <XAxis dataKey="date" interval={30} />
+          <XAxis dataKey="date" tickFormatter={dateFormatter} interval={30} />
           <YAxis
             type="number"
             domain={[
@@ -65,7 +121,7 @@ const Chart = () => {
               (dataMax: number) => Math.floor(dataMax) + 1,
             ]}
           />
-          <Tooltip />
+          <Tooltip content={renderCustomTooltip} />
           <Area
             type="monotone"
             dataKey="price"

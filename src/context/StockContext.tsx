@@ -1,18 +1,18 @@
-import * as React from "react";
-import { StockItem, StocksContextType } from "../utils/interfaces";
-import { ObjectToArray } from "../utils/helpers";
-import localforage from "localforage";
+import * as React from 'react';
+import { StockItem, StocksContextType } from '../utils/interfaces';
+import { ObjectToArray } from '../utils/helpers';
+import localforage from 'localforage';
 
 export const StockContext = React.createContext<StocksContextType | null>(null);
 const KEY = import.meta.env.VITE_APP_API_KEY;
 
 const StockProvider = ({ children }) => {
   const [stock, setStock] = React.useState<StockItem | null>(null);
-  const [symbol, setSymbol] = React.useState<string>("AAPL");
+  const [symbol, setSymbol] = React.useState<string>('AAPL');
   const [favoriteStocks, setFavoriteStocks] = React.useState<StockItem[]>([]);
-  const favoriteSymbols: string[] = ["MSFT", "AAPL", "NFLX", "WMT", "META"];
-  const ranges: string[] = ["1D", "1W", "1M", "1Y"];
-  const [selectedRange, setSelectedRange] = React.useState<string>("1D");
+  const favoriteSymbols: string[] = ['MSFT', 'AAPL', 'NFLX', 'WMT', 'META'];
+  const ranges: string[] = ['1D', '1W', '1M', '1Y'];
+  const [selectedRange, setSelectedRange] = React.useState<string>('1D');
 
   //   const getStock = async (name: string) => {
   //     try {
@@ -47,10 +47,10 @@ const StockProvider = ({ children }) => {
     try {
       // Map selectedRange to resolution
       const rangeToResolutionMap = {
-        "1D": { resolution: "1", duration: 1 },
-        "1W": { resolution: "5", duration: 7 },
-        "1M": { resolution: "30", duration: 30 },
-        "1Y": { resolution: "D", duration: 365 },
+        '1D': { resolution: '1', duration: 1 },
+        '1W': { resolution: '30', duration: 7 },
+        '1M': { resolution: '60', duration: 30 },
+        '1Y': { resolution: 'D', duration: 365 },
       };
       const { resolution, duration } = rangeToResolutionMap[selectedRange];
       // Create a key using both symbol and range
@@ -60,16 +60,14 @@ const StockProvider = ({ children }) => {
       const storedStock = await localforage.getItem<StockItem>(key);
       if (storedStock && Date.now() - storedStock.lastUpdated < 60 * 1000) {
         setStock(storedStock);
-        console.log("From localForage");
         return;
       } else {
-        console.log("Fetching from API");
+        console.log('Fetching from API');
       }
 
       // Calculate from and to timestamps based on the selected range
       const to = Math.floor(Date.now() / 1000);
       const from = to - duration * 24 * 60 * 60;
-      console.log({ from, to });
       // Fetch data from API
       const candlesResponse = await fetch(
         `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=${resolution}&from=${from}&to=${to}&token=${KEY}`
@@ -89,7 +87,6 @@ const StockProvider = ({ children }) => {
 
       const quote = await quoteResponse.json();
       const candles = await candlesResponse.json();
-      console.log(candles);
       const candlePrices = ObjectToArray(candles);
 
       // Store data in localforage

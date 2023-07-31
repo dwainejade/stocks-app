@@ -9,7 +9,6 @@ export const getUnixTimestamps = (date) => {
 };
 
 export const ObjectToArray = (obj) => {
-  console.log('obj', obj);
   const resultArray = [];
 
   // Iterate through the arrays 'c' and 't'
@@ -25,10 +24,16 @@ export const ObjectToArray = (obj) => {
   return resultArray;
 };
 
-const unixTimestampToYearMonthDayString = (unixTimestamp) => {
+const unixTimestampToYearMonthDayString = (unixTimestamp: number) => {
   const date = new Date(unixTimestamp * 1000); // Multiply by 1000 to convert to milliseconds
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so we add 1 and pad with '0' if needed
-  const day = String(date.getDate()).padStart(2, '0'); // Pad with '0' if needed
-  return `${year}-${month}-${day}`;
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZoneName: 'short',
+  };
+  return date.toLocaleString(undefined, options);
 };

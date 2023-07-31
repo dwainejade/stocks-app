@@ -4,7 +4,6 @@ import { StocksContextType } from '../../utils/interfaces';
 
 const DetailsHeader: React.FC = () => {
   const { stock } = useContext(StockContext) as StocksContextType;
-  console.log(stock);
 
   if (!stock) return;
 
