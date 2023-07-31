@@ -14,23 +14,6 @@ const StockProvider = ({ children }) => {
   const ranges: string[] = ["1D", "1W", "1M", "1Y"];
   const [selectedRange, setSelectedRange] = React.useState<string>("1D");
 
-  //   const getStock = async (name: string) => {
-  //     try {
-  //       const data = await fetch(`wss://ws.finnhub.io/quote?symbol=${name}`)
-  //         .then((response) => response.json())
-  //         .then((data) => {
-  //           console.log(data);
-  //           return data;
-  //         })
-  //         .catch((error) => error);
-
-  //       setStocks([...stocks, data]);
-  //     } catch (error) {
-  //       console.log(error);
-  //       return error;
-  //     }
-  //   };
-
   const getFavoriteStocks = async () => {
     const stocks = [];
     for (const symbol of favoriteSymbols) {
@@ -117,6 +100,19 @@ const StockProvider = ({ children }) => {
     getFavoriteStocks();
   }, []);
 
+  const searchStock = async (query) => {
+    try {
+      const response = await fetch(
+        `https://finnhub.io/api/v1/search?q=${query}&token=${KEY}`
+      );
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+
   return (
     <StockContext.Provider
       value={{
@@ -128,6 +124,7 @@ const StockProvider = ({ children }) => {
         ranges,
         selectedRange,
         setSelectedRange,
+        searchStock,
       }}
     >
       {children}
