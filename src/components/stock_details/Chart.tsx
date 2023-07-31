@@ -12,10 +12,10 @@ import { StockContext } from "../../context/StockContext";
 import { StocksContextType } from "../../utils/interfaces";
 
 const Chart = () => {
-  const { stock } = useContext(StockContext) as StocksContextType;
+  const { stock, ranges, selectedRange, setSelectedRange } = useContext(
+    StockContext
+  ) as StocksContextType;
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const ranges = ["1D", "1W", "1M", "1Y"];
-  const [selectedRange, setSelectedRange] = useState("1D");
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);

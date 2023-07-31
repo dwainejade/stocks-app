@@ -21,4 +21,7 @@ export interface StocksContextType {
   setSymbol: (symbol: string) => void;
   favoriteStocks: StockItem[];
   setFavoriteStocks: (stocks: StockItem[]) => void;
+  ranges: string[];
+  selectedRange: string;
+  setSelectedRange: (selectedRange: string) => void;
 }
