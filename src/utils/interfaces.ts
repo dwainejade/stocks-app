@@ -10,7 +10,7 @@ export interface StockItem {
     pc: number;
     t: number;
   };
-  prices: number[];
+  prices: { price: number; date: number }[];
   lastUpdated: number;
 }
 
@@ -21,4 +21,7 @@ export interface StocksContextType {
   setSymbol: (symbol: string) => void;
   favoriteStocks: StockItem[];
   setFavoriteStocks: (stocks: StockItem[]) => void;
+  ranges: string[];
+  selectedRange: string;
+  setSelectedRange: (selectedRange: string) => void;
 }

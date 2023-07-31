@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Area,
   AreaChart,
-  CartesianGrid,
   Tooltip,
   XAxis,
   YAxis,
@@ -12,7 +11,9 @@ import { StockContext } from "../../context/StockContext";
 import { StocksContextType } from "../../utils/interfaces";
 
 const Chart = () => {
-  const { stock } = useContext(StockContext) as StocksContextType;
+  const { stock, ranges, selectedRange, setSelectedRange } = useContext(
+    StockContext
+  ) as StocksContextType;
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -23,40 +24,58 @@ const Chart = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const transformedPrices = stock?.prices.map((price, index) => ({
-    price,
-    date: new Date(
-      stock.lastUpdated - (stock.prices.length - index) * 24 * 60 * 60 * 1000
-    )
-      .toISOString()
-      .split("T")[0],
-  }));
+  const handleRangeChange = (range: string) => {
+    setSelectedRange(range);
+  };
 
   return (
-    <ResponsiveContainer width={windowWidth - 450} height={250}>
-      <AreaChart
-        data={transformedPrices}
-        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+    <div>
+      <div className="flex justify-between">
+        {ranges.map((range) => (
+          <button
+            key={range}
+            className={`px-4 py-1 text-white rounded focus:ring-opacity-50 ${
+              selectedRange === range ? "bg-gray-700" : null
+            }`}
+            onClick={() => handleRangeChange(range)}
+          >
+            {range}
+          </button>
+        ))}
+      </div>
+      <ResponsiveContainer
+        width={windowWidth - 450 > 800 ? 800 : windowWidth - 450}
+        height={250}
       >
-        <defs>
-          <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-            <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-          </linearGradient>
-        </defs>
-        <XAxis dataKey="date" />
-        <YAxis />
-        {/* <CartesianGrid strokeDasharray="3 3" /> */}
-        <Tooltip />
-        <Area
-          type="monotone"
-          dataKey="price"
-          stroke="#8884d8"
-          fillOpacity={1}
-          fill="url(#colorUv)"
-        />
-      </AreaChart>
-    </ResponsiveContainer>
+        <AreaChart
+          data={stock?.prices}
+          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+        >
+          <defs>
+            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#8884d8" stopOpacity={1} />
+              <stop offset="95%" stopColor="#8884d8" stopOpacity={0.2} />
+            </linearGradient>
+          </defs>
+          <XAxis dataKey="date" interval={30} />
+          <YAxis
+            type="number"
+            domain={[
+              (dataMin: number) => Math.floor(dataMin) - 1,
+              (dataMax: number) => Math.floor(dataMax) + 1,
+            ]}
+          />
+          <Tooltip />
+          <Area
+            type="monotone"
+            dataKey="price"
+            stroke="#8884d8"
+            fillOpacity={0.2}
+            fill="url(#colorUv)"
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 

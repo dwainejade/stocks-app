@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
-import { StockContext } from "../../context/StockContext";
-import { StocksContextType } from "../../utils/interfaces";
+import React, { useContext } from 'react';
+import { StockContext } from '../../context/StockContext';
+import { StocksContextType } from '../../utils/interfaces';
 
 const DetailsHeader: React.FC = () => {
   const { stock } = useContext(StockContext) as StocksContextType;
@@ -17,9 +17,11 @@ const DetailsHeader: React.FC = () => {
       <div className="flex flex-col">
         <span>${stock?.quote.c.toFixed(2)}</span>
         <span
-          className={` ${stock.quote.d > 0 ? "text-green-500" : "bg-red-500"}`}
+          className={` ${
+            stock.quote.d > 0 ? 'text-green-500' : 'text-red-500'
+          }`}
         >
-          {stock?.quote.d > 0 ? "+" : "-"}
+          {stock?.quote.d > 0 ? '+' : ''}
           {stock?.quote.d.toFixed(2)}
         </span>
       </div>

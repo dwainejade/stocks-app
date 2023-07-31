@@ -20,16 +20,18 @@ const StockList: React.FC = () => {
     StockContext
   ) as StocksContextType;
 
+  if (!favoriteStocks) return null;
+
   return (
     <div>
       {favoriteStocks?.map((stock: StockItem, index: number) => (
         <div
           key={index}
-          className={`border-gray-500 cursor-pointer ${
+          className={`border-gray-500 cursor-pointer text-sm ${
             stock.symbol === symbol ? "bg-gray-700 rounded-md" : null
           }`}
         >
-          <StockListItem symbol={stock?.symbol} price={stock?.quote.c} />
+          <StockListItem symbol={stock.symbol} price={stock.quote.c} />
         </div>
       ))}
     </div>
