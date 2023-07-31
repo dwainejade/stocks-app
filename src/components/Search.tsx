@@ -3,16 +3,18 @@ import { StockContext } from "../context/StockContext";
 import { MagnifyingGlassIcon, XCircleIcon } from "@heroicons/react/24/solid";
 
 const StockSearch = () => {
-  const { setSymbol } = useContext(StockContext);
+  const { setSymbol, searchStock } = useContext(StockContext);
   const [inputValue, setInputValue] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
 
-  const handleSearch = (event) => {
+  const handleSearch = async (event) => {
     event.preventDefault();
-    setSymbol(inputValue);
+    const results = await searchStock(inputValue);
+    setSearchResults(results);
   };
 
   return (
