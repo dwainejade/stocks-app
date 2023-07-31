@@ -1,16 +1,16 @@
-import * as React from "react";
-import { StockItem, StocksContextType } from "../utils/interfaces";
-import { getUnixTimestamps } from "../utils/helpers";
-import localforage from "localforage";
+import * as React from 'react';
+import { StockItem, StocksContextType } from '../utils/interfaces';
+import { getUnixTimestamps, ObjectToArray } from '../utils/helpers';
+import localforage from 'localforage';
 
 export const StockContext = React.createContext<StocksContextType | null>(null);
 const KEY = import.meta.env.VITE_APP_API_KEY;
 
 const StockProvider = ({ children }) => {
   const [stock, setStock] = React.useState<StockItem | null>(null);
-  const [symbol, setSymbol] = React.useState<string>("AAPL");
+  const [symbol, setSymbol] = React.useState<string>('AAPL');
   const [favoriteStocks, setFavoriteStocks] = React.useState<StockItem[]>([]);
-  const favoriteSymbols = ["MSFT", "AAPL", "NFLX", "WMT", "META"];
+  const favoriteSymbols = ['MSFT', 'AAPL', 'NFLX', 'WMT', 'META'];
 
   //   const getStock = async (name: string) => {
   //     try {
@@ -47,10 +47,10 @@ const StockProvider = ({ children }) => {
       const storedStock = await localforage.getItem<StockItem>(symbol);
       if (storedStock && Date.now() - storedStock.lastUpdated < 60 * 1000) {
         setStock(storedStock);
-        console.log("From localForage");
+        console.log('From localForage');
         return;
       } else {
-        console.log("Fetching from API");
+        console.log('Fetching from API');
       }
 
       // Fetch data from API
@@ -75,11 +75,13 @@ const StockProvider = ({ children }) => {
       const quote = await quoteResponse.json();
       const candles = await candlesResponse.json();
 
+      const candlePrices = ObjectToArray(candles);
+
       // Store data in localforage
       const newStock: StockItem = {
         symbol,
         quote,
-        prices: candles.c,
+        prices: candlePrices,
         lastUpdated: Date.now(),
       };
       await localforage.setItem(symbol, newStock);

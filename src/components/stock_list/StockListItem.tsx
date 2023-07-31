@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { StockContext } from "../../context/StockContext";
+import React, { useContext } from 'react';
+import { StockContext } from '../../context/StockContext';
 
 interface StockListItemProps {
   symbol: string;
@@ -18,7 +18,7 @@ const StockListItem: React.FC<StockListItemProps> = ({ symbol, price }) => {
       onClick={handleClick}
     >
       <span className="font-medium">{symbol}</span>
-      <span className="font-light">{price.toFixed(2)}</span>
+      <span className="font-light">{price?.toFixed(2)}</span>
     </div>
   );
 };

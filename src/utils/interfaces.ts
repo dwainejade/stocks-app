@@ -10,7 +10,7 @@ export interface StockItem {
     pc: number;
     t: number;
   };
-  prices: number[];
+  prices: { price: number; date: number }[];
   lastUpdated: number;
 }
 

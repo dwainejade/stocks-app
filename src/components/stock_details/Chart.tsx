@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Area,
   AreaChart,
@@ -7,9 +7,9 @@ import {
   XAxis,
   YAxis,
   ResponsiveContainer,
-} from "recharts";
-import { StockContext } from "../../context/StockContext";
-import { StocksContextType } from "../../utils/interfaces";
+} from 'recharts';
+import { StockContext } from '../../context/StockContext';
+import { StocksContextType } from '../../utils/interfaces';
 
 const Chart = () => {
   const { stock } = useContext(StockContext) as StocksContextType;
@@ -17,25 +17,25 @@ const Chart = () => {
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     // Clean up the event listener on unmount
-    return () => window.removeEventListener("resize", handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const transformedPrices = stock?.prices.map((price, index) => ({
     price,
     date: new Date(
-      stock.lastUpdated - (stock.prices.length - index) * 24 * 60 * 60 * 1000
+      stock.lastUpdated -
+        (stock.prices.length - index - 1) * 24 * 60 * 60 * 1000
     )
       .toISOString()
-      .split("T")[0],
+      .split('T')[0],
   }));
-
   return (
     <ResponsiveContainer width={windowWidth - 450} height={250}>
       <AreaChart
-        data={transformedPrices}
+        data={stock?.prices}
         margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
       >
         <defs>
@@ -44,7 +44,7 @@ const Chart = () => {
             <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
           </linearGradient>
         </defs>
-        <XAxis dataKey="date" />
+        <XAxis dataKey="date" interval={30} />
         <YAxis />
         {/* <CartesianGrid strokeDasharray="3 3" /> */}
         <Tooltip />
