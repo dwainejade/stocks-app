@@ -1,6 +1,6 @@
 import * as React from "react";
 import { StockItem, StocksContextType } from "../utils/interfaces";
-import { getUnixTimestamps, ObjectToArray } from "../utils/helpers";
+import { ObjectToArray } from "../utils/helpers";
 import localforage from "localforage";
 
 export const StockContext = React.createContext<StocksContextType | null>(null);
@@ -47,7 +47,7 @@ const StockProvider = ({ children }) => {
     try {
       // Map selectedRange to resolution
       const rangeToResolutionMap = {
-        "1D": { resolution: "1", duration: 2 },
+        "1D": { resolution: "1", duration: 1 },
         "1W": { resolution: "5", duration: 7 },
         "1M": { resolution: "30", duration: 30 },
         "1Y": { resolution: "D", duration: 365 },

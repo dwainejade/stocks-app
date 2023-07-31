@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Area,
   AreaChart,
-  CartesianGrid,
   Tooltip,
   XAxis,
   YAxis,
@@ -25,19 +24,8 @@ const Chart = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const transformedPrices = stock?.prices.map((price, index) => ({
-    price,
-    date: new Date(
-      stock.lastUpdated -
-        (stock.prices.length - index - 1) * 24 * 60 * 60 * 1000
-    )
-      .toISOString()
-      .split("T")[0],
-  }));
-
   const handleRangeChange = (range: string) => {
     setSelectedRange(range);
-    // TODO: Fetch data based on selected range
   };
 
   return (
@@ -70,7 +58,13 @@ const Chart = () => {
             </linearGradient>
           </defs>
           <XAxis dataKey="date" interval={30} />
-          <YAxis />
+          <YAxis
+            type="number"
+            domain={[
+              (dataMin: number) => Math.floor(dataMin) - 1,
+              (dataMax: number) => Math.floor(dataMax) + 1,
+            ]}
+          />
           <Tooltip />
           <Area
             type="monotone"
