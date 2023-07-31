@@ -69,7 +69,7 @@ const StockProvider = ({ children }) => {
       // Calculate from and to timestamps based on the selected range
       const to = Math.floor(Date.now() / 1000);
       const from = to - duration * 24 * 60 * 60;
-      console.log({ from, to });
+
       // Fetch data from API
       const candlesResponse = await fetch(
         `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=${resolution}&from=${from}&to=${to}&token=${KEY}`
