@@ -10,6 +10,19 @@ import {
 import { StockContext } from "../../context/StockContext";
 import { StocksContextType } from "../../utils/interfaces";
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip bg-gray-700 p-2 rounded text-white">
+        <p className="label">{`Date : ${label}`}</p>
+        <p className="intro">{`Price : ${payload[0].value}`}</p>
+      </div>
+    );
+  }
+
+  return null;
+};
+
 const Chart = () => {
   const { stock, ranges, selectedRange, setSelectedRange } = useContext(
     StockContext
@@ -58,7 +71,7 @@ const Chart = () => {
               <stop offset="95%" stopColor="#8884d8" stopOpacity={0.2} />
             </linearGradient>
           </defs>
-          <XAxis dataKey="date" interval={30} />
+          <XAxis dataKey="date" />
           <YAxis
             type="number"
             domain={[
@@ -67,7 +80,7 @@ const Chart = () => {
             ]}
             orientation="right"
           />
-          <Tooltip />
+          <Tooltip content={<CustomTooltip />} />
           <Area
             type="monotone"
             dataKey="price"
