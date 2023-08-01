@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { StockContext } from "../context/StockContext";
 import { MagnifyingGlassIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import companyStocks from "../constants/companySymbols.json";
 
 interface SearchResult {
   symbol: string;
@@ -18,16 +19,34 @@ const StockSearch = () => {
     setInputValue(event.target.value);
   };
 
+  const searchLocalCompanies = (query: string) => {
+    const lowerCaseQuery = query.toLowerCase();
+    return companyStocks.filter(
+      (company) =>
+        company.symbol.toLowerCase().includes(lowerCaseQuery) ||
+        company.description.toLowerCase().includes(lowerCaseQuery)
+    );
+  };
+
   const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
     setError(null);
     try {
-      const results = await searchStock(inputValue);
-      const filteredResults = results.result.filter(
-        (result) => result.type === "Common Stock"
-      );
-      setSearchResults(filteredResults);
+      // First, search the local JSON file
+      const localResults = searchLocalCompanies(inputValue);
+
+      // If local results are found, use them
+      if (localResults.length > 0) {
+        setSearchResults(localResults);
+      } else {
+        // If no local results are found, fall back to the API search
+        const results = await searchStock(inputValue);
+        const filteredResults = results.result.filter(
+          (result) => result.type === "Common Stock"
+        );
+        setSearchResults(filteredResults);
+      }
     } catch (err) {
       setError(err.message);
     } finally {
