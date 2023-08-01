@@ -9,7 +9,6 @@ export const getUnixTimestamps = (date) => {
 };
 
 export const ObjectToArray = (obj) => {
-  console.log('obj', obj);
   const resultArray = [];
 
   // Iterate through the arrays 'c' and 't'
@@ -28,7 +27,7 @@ export const ObjectToArray = (obj) => {
 const unixTimestampToYearMonthDayString = (unixTimestamp) => {
   const date = new Date(unixTimestamp * 1000); // Multiply by 1000 to convert to milliseconds
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so we add 1 and pad with '0' if needed
-  const day = String(date.getDate()).padStart(2, '0'); // Pad with '0' if needed
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based, so we add 1 and pad with '0' if needed
+  const day = String(date.getDate()).padStart(2, "0"); // Pad with '0' if needed
   return `${year}-${month}-${day}`;
 };
