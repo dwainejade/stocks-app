@@ -60,8 +60,6 @@ const StockSearch = () => {
     setSearchResults([]);
   };
 
-  console.log(searchResults);
-
   return (
     <div className="relative w-full">
       <form
