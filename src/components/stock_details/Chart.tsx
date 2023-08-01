@@ -31,17 +31,18 @@ const Chart = () => {
   return (
     <div>
       <div className="flex justify-between">
-        {ranges.map((range) => (
-          <button
-            key={range}
-            className={`px-4 py-1 text-white rounded focus:ring-opacity-50 ${
-              selectedRange === range ? "bg-gray-700" : null
-            }`}
-            onClick={() => handleRangeChange(range)}
-          >
-            {range}
-          </button>
-        ))}
+        {stock &&
+          ranges.map((range) => (
+            <button
+              key={range}
+              className={`px-4 py-1 text-white rounded focus:ring-opacity-50 ${
+                selectedRange === range ? "bg-gray-700" : null
+              }`}
+              onClick={() => handleRangeChange(range)}
+            >
+              {range}
+            </button>
+          ))}
       </div>
       <ResponsiveContainer
         width={windowWidth - 450 > 800 ? 800 : windowWidth - 450}
