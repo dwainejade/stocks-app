@@ -8,9 +8,9 @@ const KEY = import.meta.env.VITE_APP_API_KEY;
 
 const StockProvider = ({ children }) => {
   const [stock, setStock] = React.useState<StockItem | null>(null);
-  const [symbol, setSymbol] = React.useState<string>("AAPL");
+  const [symbol, setSymbol] = React.useState<string>("");
   const [favoriteStocks, setFavoriteStocks] = React.useState<StockItem[]>([]);
-  const favoriteSymbols: string[] = ["MSFT", "AAPL", "NFLX", "WMT", "META"];
+  const favoriteSymbols: string[] = [];
   const ranges: string[] = ["1D", "1W", "1M", "1Y"];
   const [selectedRange, setSelectedRange] = React.useState<string>("1D");
 
@@ -24,7 +24,24 @@ const StockProvider = ({ children }) => {
       stocks.push({ symbol, quote });
     }
     setFavoriteStocks(stocks);
+    await localforage.setItem("favoriteStocks", stocks);
   };
+
+  React.useEffect(() => {
+    const loadFavoriteStocks = async () => {
+      const storedFavoriteStocks = await localforage.getItem<StockItem[]>(
+        "favoriteStocks"
+      );
+      if (storedFavoriteStocks) {
+        setFavoriteStocks(storedFavoriteStocks);
+      }
+    };
+    loadFavoriteStocks();
+  }, []);
+
+  React.useEffect(() => {
+    localforage.setItem("favoriteStocks", favoriteStocks);
+  }, [favoriteStocks]);
 
   const getStock = async () => {
     try {
@@ -45,8 +62,6 @@ const StockProvider = ({ children }) => {
         setStock(storedStock);
         console.log("From localForage");
         return;
-      } else {
-        console.log("Fetching from API");
       }
 
       // Calculate from and to timestamps based on the selected range
@@ -72,7 +87,6 @@ const StockProvider = ({ children }) => {
 
       const quote = await quoteResponse.json();
       const candles = await candlesResponse.json();
-      console.log(candles);
       const candlePrices = ObjectToArray(candles);
 
       // Store data in localforage
