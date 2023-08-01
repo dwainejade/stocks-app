@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { StockContext } from '../../context/StockContext';
+import React, { useContext } from "react";
+import { StockContext } from "../../context/StockContext";
 
 interface StockListItemProps {
   symbol: string;
@@ -14,7 +14,7 @@ const StockListItem: React.FC<StockListItemProps> = ({ symbol, price }) => {
 
   return (
     <div
-      className="flex justify-between items-center p-2 h-16 rounded-md"
+      className="flex justify-between items-center p-2 h-14 rounded-md"
       onClick={handleClick}
     >
       <span className="font-medium">{symbol}</span>
