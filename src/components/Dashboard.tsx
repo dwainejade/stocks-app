@@ -7,11 +7,15 @@ import StockInfo from "./stock_details/StockInfo";
 
 const StockDashboard: React.FC = () => {
   return (
-    <div className="flex  h-screen w-screen bg-gray-800 text-gray-50">
+    <div className="flex h-screen w-screen bg-gray-800 text-gray-50">
       {/* Left side with list of stocks */}
-      <div className="w-[330px] flex-shrink-0 p-3 overflow-y-auto bg-grey-100">
-        <Search />
-        <StockList />
+      <div className="w-[330px] flex-shrink-0 h-full flex flex-col bg-grey-100">
+        <div className="border-b border-gray-900 p-3 bg-gray-800">
+          <Search />
+        </div>
+        <div className="p-3 overflow-y-auto flex-grow">
+          <StockList />
+        </div>
       </div>
 
       {/* Right side with chart and stock details */}
