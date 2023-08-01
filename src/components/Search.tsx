@@ -64,7 +64,7 @@ const StockSearch = () => {
     <div className="relative w-full">
       <form
         onSubmit={handleSearch}
-        className="flex items-center w-full mt-5 relative"
+        className="flex items-center w-full relative"
       >
         <span className="absolute pl-3 text-gray-400">
           <MagnifyingGlassIcon className="h-5 w-5" />

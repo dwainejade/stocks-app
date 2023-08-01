@@ -10,7 +10,7 @@ const StockDashboard: React.FC = () => {
     <div className="flex h-screen w-screen bg-gray-800 text-gray-50">
       {/* Left side with list of stocks */}
       <div className="w-[330px] flex-shrink-0 h-full flex flex-col bg-grey-100">
-        <div className="border-b border-gray-900 p-3 bg-gray-800">
+        <div className="border-b-2 border-gray-600 p-3 bg-gray-800">
           <Search />
         </div>
         <div className="p-3 overflow-y-auto flex-grow">
