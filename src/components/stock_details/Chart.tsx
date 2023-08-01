@@ -29,6 +29,32 @@ const Chart = () => {
   ) as StocksContextType;
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
+  const formatTick = (tick) => {
+    console.log(tick);
+    const date = new Date(tick);
+    switch (selectedRange) {
+      case "1D":
+        return ""; // returns the hour
+      case "1W":
+        return `${date.getMonth() + 1}/${date.getDate()}`; // returns 'M/D'
+      case "1M":
+        const day = date.getDay();
+        if (day === 1) {
+          // Check if it's Monday
+          return `${date.getMonth() + 1}/${date.getDate()}`; // returns 'M/D'
+        } else {
+          return "";
+        }
+      case "1Y":
+        return `${date.getMonth() + 1}/${date
+          .getFullYear()
+          .toString()
+          .substr(-2)}`; // returns 'M/YY'
+      default:
+        return tick;
+    }
+  };
+
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
@@ -71,7 +97,9 @@ const Chart = () => {
               <stop offset="95%" stopColor="#8884d8" stopOpacity={0.2} />
             </linearGradient>
           </defs>
-          <XAxis dataKey="date" />
+
+          <XAxis dataKey="date" tickFormatter={formatTick} />
+
           <YAxis
             type="number"
             domain={[
@@ -80,7 +108,9 @@ const Chart = () => {
             ]}
             orientation="right"
           />
+
           <Tooltip content={<CustomTooltip />} />
+
           <Area
             type="monotone"
             dataKey="price"
