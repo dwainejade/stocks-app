@@ -7,10 +7,8 @@ const DetailsHeader: React.FC = () => {
   const { stock, favoriteStocks, setFavoriteStocks } = useContext(
     StockContext
   ) as StocksContextType;
-  console.log(stock);
 
   if (!stock) return;
-  console.log(favoriteStocks);
 
   const handleFavoriteClick = () => {
     if (
