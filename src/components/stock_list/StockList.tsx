@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import StockListItem from "./StockListItem";
 import { StockContext } from "../../context/StockContext";
 import { StocksContextType } from "../../utils/interfaces";
-import { Reorder, motion } from "framer-motion";
+import { Reorder } from "framer-motion";
 
 interface StockItem {
   symbol: string;
@@ -17,7 +17,7 @@ interface StockItem {
 }
 
 const StockList: React.FC = () => {
-  const { favoriteStocks, setFavoriteStocks, symbol } = useContext(
+  const { favoriteStocks, setFavoriteStocks } = useContext(
     StockContext
   ) as StocksContextType;
 
