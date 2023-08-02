@@ -33,12 +33,12 @@ const DetailsHeader: React.FC = () => {
           (favoriteStock) => favoriteStock.symbol === stock.symbol
         ) ? (
           <CheckCircleIcon
-            className="h-6 w-6 cursor-pointer"
+            className="w-6 h-6 cursor-pointer"
             onClick={handleFavoriteClick}
           />
         ) : (
           <PlusIcon
-            className="h-5 w-5 cursor-pointer"
+            className="w-6 h-6 cursor-pointer"
             onClick={handleFavoriteClick}
           />
         )}
