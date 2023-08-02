@@ -11,7 +11,7 @@ const StockDashboard: React.FC = () => {
   const { symbol, favoriteStocks } = useContext(
     StockContext
   ) as StocksContextType;
-  console.log(favoriteStocks, symbol);
+
   return (
     <div className="flex h-screen w-screen bg-gray-800 text-gray-50 overflow-none">
       {/* Left side with list of stocks */}
@@ -29,7 +29,7 @@ const StockDashboard: React.FC = () => {
         {favoriteStocks.length > 0 || symbol ? (
           <div className="max-w-[900px] flex flex-col items-center justify-center">
             <DetailsHeader />
-            <Chart />
+            {symbol && <Chart />}
             <StockInfo />
             {/* Stock News */}
           </div>
