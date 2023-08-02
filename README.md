@@ -38,3 +38,6 @@ npm run lint
 - React
 - TypeScript
 - Tailwind CSS
+- Recharts
+- Local Forage
+- Framer-Motion
