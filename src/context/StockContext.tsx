@@ -15,13 +15,13 @@ const StockProvider: React.FC = ({ children }) => {
   const [selectedRange, setSelectedRange] = React.useState<string>("1D");
 
   const getFavoriteStocks = async () => {
-    const stocks = [];
+    const stocks: StockItem[] = [];
     for (const symbol of favoriteSymbols) {
       const response = await fetch(
         `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${KEY}`
       );
       const quote = await response.json();
-      stocks.push({ symbol, quote });
+      stocks.push({ symbol, quote, prices: [], lastUpdated: Date.now() });
     }
     setFavoriteStocks(stocks);
     await localforage.setItem("favoriteStocks", stocks);
