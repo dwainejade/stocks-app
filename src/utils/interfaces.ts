@@ -1,4 +1,4 @@
-import { TooltipPayload } from 'recharts';
+import { TooltipPayload } from "recharts";
 export interface StockItem {
   symbol: string;
   quote: {
@@ -39,4 +39,17 @@ export interface CustomTooltipProps {
   active?: boolean;
   payload?: TooltipPayload[];
   label?: string;
+}
+
+export interface companySymbols {
+  currency: string;
+  description: string;
+  displaySymbol: string;
+  figi: string;
+  isin: string;
+  mic: string;
+  shareClassFIGI: string;
+  symbol: string;
+  symbol2: string;
+  type: string;
 }

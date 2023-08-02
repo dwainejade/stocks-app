@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { StockContext } from "../../context/StockContext";
-import { StocksContextType } from "../../utils/interfaces";
+import { StocksContextType, companySymbols } from "../../utils/interfaces";
 import { CheckCircleIcon, PlusIcon } from "@heroicons/react/24/solid";
 import companyStocks from "../../constants/companySymbols.json";
 
@@ -29,10 +29,10 @@ const DetailsHeader: React.FC = () => {
 
   // Find the company name from the companyStocks JSON
   const companyName = companyStocks.find(
-    (company) => company.symbol === stock.symbol
+    (company: companySymbols) => company.symbol === stock.symbol
   )?.description;
 
-  const capitalize = (str) => {
+  const capitalize = (str: string) => {
     return str
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())

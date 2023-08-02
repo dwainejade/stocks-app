@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { StockContext } from "../context/StockContext";
 import { MagnifyingGlassIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import companyStocks from "../constants/companySymbols.json";
+import { StocksContextType, companySymbols } from "../utils/interfaces";
 
 interface SearchResult {
   symbol: string;
@@ -9,7 +10,9 @@ interface SearchResult {
 }
 
 const StockSearch = () => {
-  const { setSymbol, searchStock } = useContext(StockContext);
+  const { setSymbol, searchStock } = useContext(
+    StockContext
+  ) as StocksContextType;
   const [inputValue, setInputValue] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +25,7 @@ const StockSearch = () => {
   const searchLocalCompanies = (query: string) => {
     const lowerCaseQuery = query.toLowerCase();
     return companyStocks.filter(
-      (company) =>
+      (company: companySymbols) =>
         company.symbol.toLowerCase().includes(lowerCaseQuery) ||
         company.description.toLowerCase().includes(lowerCaseQuery)
     );
