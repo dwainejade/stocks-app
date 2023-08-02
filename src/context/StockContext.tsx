@@ -6,30 +6,13 @@ import localforage from "localforage";
 export const StockContext = React.createContext<StocksContextType | null>(null);
 const KEY = import.meta.env.VITE_APP_API_KEY;
 
-const StockProvider = ({ children }) => {
+const StockProvider: React.FC = ({ children }) => {
   const [stock, setStock] = React.useState<StockItem | null>(null);
-  const [symbol, setSymbol] = React.useState<string>("AAPL");
+  const [symbol, setSymbol] = React.useState<string>("");
   const [favoriteStocks, setFavoriteStocks] = React.useState<StockItem[]>([]);
-  const favoriteSymbols: string[] = ["MSFT", "AAPL", "NFLX", "WMT", "META"];
+  const favoriteSymbols: string[] = [];
   const ranges: string[] = ["1D", "1W", "1M", "1Y"];
   const [selectedRange, setSelectedRange] = React.useState<string>("1D");
-
-  //   const getStock = async (name: string) => {
-  //     try {
-  //       const data = await fetch(`wss://ws.finnhub.io/quote?symbol=${name}`)
-  //         .then((response) => response.json())
-  //         .then((data) => {
-  //           console.log(data);
-  //           return data;
-  //         })
-  //         .catch((error) => error);
-
-  //       setStocks([...stocks, data]);
-  //     } catch (error) {
-  //       console.log(error);
-  //       return error;
-  //     }
-  //   };
 
   const getFavoriteStocks = async () => {
     const stocks = [];
@@ -41,7 +24,24 @@ const StockProvider = ({ children }) => {
       stocks.push({ symbol, quote });
     }
     setFavoriteStocks(stocks);
+    await localforage.setItem("favoriteStocks", stocks);
   };
+
+  React.useEffect(() => {
+    const loadFavoriteStocks = async () => {
+      const storedFavoriteStocks = await localforage.getItem<StockItem[]>(
+        "favoriteStocks"
+      );
+      if (storedFavoriteStocks) {
+        setFavoriteStocks(storedFavoriteStocks);
+      }
+    };
+    loadFavoriteStocks();
+  }, []);
+
+  React.useEffect(() => {
+    localforage.setItem("favoriteStocks", favoriteStocks);
+  }, [favoriteStocks]);
 
   const getStock = async () => {
     try {
@@ -62,14 +62,12 @@ const StockProvider = ({ children }) => {
         setStock(storedStock);
         console.log("From localForage");
         return;
-      } else {
-        console.log("Fetching from API");
       }
 
       // Calculate from and to timestamps based on the selected range
       const to = Math.floor(Date.now() / 1000);
       const from = to - duration * 24 * 60 * 60;
-      console.log({ from, to });
+
       // Fetch data from API
       const candlesResponse = await fetch(
         `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=${resolution}&from=${from}&to=${to}&token=${KEY}`
@@ -89,7 +87,6 @@ const StockProvider = ({ children }) => {
 
       const quote = await quoteResponse.json();
       const candles = await candlesResponse.json();
-      console.log(candles);
       const candlePrices = ObjectToArray(candles);
 
       // Store data in localforage
@@ -117,10 +114,24 @@ const StockProvider = ({ children }) => {
     getFavoriteStocks();
   }, []);
 
+  const searchStock = async (query) => {
+    try {
+      const response = await fetch(
+        `https://finnhub.io/api/v1/search?q=${query}&token=${KEY}`
+      );
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+
   return (
     <StockContext.Provider
       value={{
         stock,
+        getStock,
         symbol,
         setSymbol,
         favoriteStocks,
@@ -128,6 +139,7 @@ const StockProvider = ({ children }) => {
         ranges,
         selectedRange,
         setSelectedRange,
+        searchStock,
       }}
     >
       {children}

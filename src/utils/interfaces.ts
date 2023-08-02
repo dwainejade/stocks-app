@@ -14,6 +14,13 @@ export interface StockItem {
   lastUpdated: number;
 }
 
+export interface SearchResult {
+  description: string;
+  displaySymbol: string;
+  symbol: string;
+  type: string;
+}
+
 export interface StocksContextType {
   stock: StockItem | null;
   getStock: (name?: string) => void;
@@ -24,4 +31,5 @@ export interface StocksContextType {
   ranges: string[];
   selectedRange: string;
   setSelectedRange: (selectedRange: string) => void;
+  searchStock: (query: string) => Promise<SearchResult[]>;
 }
