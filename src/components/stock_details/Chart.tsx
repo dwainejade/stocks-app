@@ -29,29 +29,18 @@ const Chart = () => {
   ) as StocksContextType;
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const formatTick = (tick) => {
-    console.log(tick);
-    const date = new Date(tick);
+  const calculateInterval = (selectedRange, dataLength) => {
     switch (selectedRange) {
       case "1D":
-        return ""; // returns the hour
+        return Math.floor(dataLength / 24);
       case "1W":
-        return `${date.getMonth() + 1}/${date.getDate()}`; // returns 'M/D'
+        return Math.floor(dataLength / 7);
       case "1M":
-        const day = date.getDay();
-        if (day === 1) {
-          // Check if it's Monday
-          return `${date.getMonth() + 1}/${date.getDate()}`; // returns 'M/D'
-        } else {
-          return "";
-        }
+        return Math.floor(dataLength / 4);
       case "1Y":
-        return `${date.getMonth() + 1}/${date
-          .getFullYear()
-          .toString()
-          .substr(-2)}`; // returns 'M/YY'
+        return Math.floor(dataLength / 12);
       default:
-        return tick;
+        return 0;
     }
   };
 
@@ -66,6 +55,10 @@ const Chart = () => {
   const handleRangeChange = (range: string) => {
     setSelectedRange(range);
   };
+
+  // Determine the color of the graph based on the opening and current prices
+  const graphColor =
+    stock && stock.quote.c > stock.quote.o ? "#018E42" : "#BB0A21";
 
   return (
     <div>
@@ -93,12 +86,12 @@ const Chart = () => {
         >
           <defs>
             <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#8884d8" stopOpacity={1} />
-              <stop offset="95%" stopColor="#8884d8" stopOpacity={0.2} />
+              <stop offset="5%" stopColor={graphColor} stopOpacity={1} />
+              <stop offset="95%" stopColor={graphColor} stopOpacity={0.2} />
             </linearGradient>
           </defs>
 
-          <XAxis dataKey="date" tickFormatter={formatTick} />
+          <XAxis dataKey="date" interval={calculateInterval} />
 
           <YAxis
             type="number"
@@ -114,8 +107,9 @@ const Chart = () => {
           <Area
             type="monotone"
             dataKey="price"
-            stroke="#8884d8"
-            fillOpacity={0.2}
+            stroke={graphColor}
+            strokeWidth={1.5}
+            fillOpacity={0.3}
             fill="url(#colorUv)"
           />
         </AreaChart>
