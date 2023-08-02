@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import StockList from "./stock_list/StockList";
 import DetailsHeader from "./stock_details/DetailsHeader";
 import Chart from "./stock_details/Chart";
 import Search from "./Search";
 import StockInfo from "./stock_details/StockInfo";
+import { StockContext } from "../context/StockContext";
+import { StocksContextType } from "../utils/interfaces";
 
 const StockDashboard: React.FC = () => {
+  const { symbol, favoriteStocks } = useContext(
+    StockContext
+  ) as StocksContextType;
+  console.log(favoriteStocks, symbol);
   return (
     <div className="flex h-screen w-screen bg-gray-800 text-gray-50 overflow-none">
       {/* Left side with list of stocks */}
@@ -20,12 +26,18 @@ const StockDashboard: React.FC = () => {
 
       {/* Right side with chart and stock details */}
       <div className="flex-grow flex justify-center items-start bg-gray-900 text-gray-50 p-5 overflow-y-auto">
-        <div className="max-w-[900px] flex flex-col items-center justify-center">
-          <DetailsHeader />
-          <Chart />
-          <StockInfo />
-          {/* Stock News */}
-        </div>
+        {favoriteStocks.length > 0 || symbol ? (
+          <div className="max-w-[900px] flex flex-col items-center justify-center">
+            <DetailsHeader />
+            <Chart />
+            <StockInfo />
+            {/* Stock News */}
+          </div>
+        ) : (
+          <div className="max-w-[900px] flex flex-col h-2/4 items-center justify-center text-3xl">
+            Search and add a stock to view its details.
+          </div>
+        )}
       </div>
     </div>
   );
