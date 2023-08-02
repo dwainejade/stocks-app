@@ -6,7 +6,7 @@ import localforage from "localforage";
 export const StockContext = React.createContext<StocksContextType | null>(null);
 const KEY = import.meta.env.VITE_APP_API_KEY;
 
-const StockProvider = ({ children }) => {
+const StockProvider: React.FC = ({ children }) => {
   const [stock, setStock] = React.useState<StockItem | null>(null);
   const [symbol, setSymbol] = React.useState<string>("");
   const [favoriteStocks, setFavoriteStocks] = React.useState<StockItem[]>([]);
@@ -131,6 +131,7 @@ const StockProvider = ({ children }) => {
     <StockContext.Provider
       value={{
         stock,
+        getStock,
         symbol,
         setSymbol,
         favoriteStocks,
