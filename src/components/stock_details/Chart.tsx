@@ -58,7 +58,10 @@ const Chart = () => {
 
   // Determine the color of the graph based on the opening and current prices
   const graphColor =
-    stock && stock.quote.c > stock.quote.o ? "#018E42" : "#BB0A21";
+    stock &&
+    stock.prices[0].price <= stock?.prices[stock.prices.length - 1].price
+      ? "#018E42"
+      : "#BB0A21";
 
   return (
     <div>
