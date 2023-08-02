@@ -1,3 +1,4 @@
+import { TooltipPayload } from 'recharts';
 export interface StockItem {
   symbol: string;
   quote: {
@@ -10,7 +11,7 @@ export interface StockItem {
     pc: number;
     t: number;
   };
-  prices: { price: number; date: number }[];
+  prices: { price: number; date: string }[];
   lastUpdated: number;
 }
 
@@ -32,4 +33,10 @@ export interface StocksContextType {
   selectedRange: string;
   setSelectedRange: (selectedRange: string) => void;
   searchStock: (query: string) => Promise<SearchResult[]>;
+}
+
+export interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipPayload[];
+  label?: string;
 }
