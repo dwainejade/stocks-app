@@ -27,13 +27,13 @@ export const ObjectToArray = (obj) => {
 const unixTimestampToYearMonthDayString = (unixTimestamp: number) => {
   const date = new Date(unixTimestamp * 1000); // Multiply by 1000 to convert to milliseconds
   const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    timeZoneName: 'short',
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZoneName: "short",
   };
   return date.toLocaleString(undefined, options);
 };
