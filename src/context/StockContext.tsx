@@ -48,8 +48,8 @@ const StockProvider: React.FC = ({ children }) => {
       // Map selectedRange to resolution
       const rangeToResolutionMap = {
         "1D": { resolution: "1", duration: 1 },
-        "1W": { resolution: "5", duration: 7 },
-        "1M": { resolution: "30", duration: 30 },
+        "1W": { resolution: "30", duration: 7 },
+        "1M": { resolution: "60", duration: 30 },
         "1Y": { resolution: "D", duration: 365 },
       };
       const { resolution, duration } = rangeToResolutionMap[selectedRange];
@@ -60,14 +60,14 @@ const StockProvider: React.FC = ({ children }) => {
       const storedStock = await localforage.getItem<StockItem>(key);
       if (storedStock && Date.now() - storedStock.lastUpdated < 60 * 1000) {
         setStock(storedStock);
-        console.log("From localForage");
         return;
+      } else {
+        console.log("Fetching from API");
       }
 
       // Calculate from and to timestamps based on the selected range
       const to = Math.floor(Date.now() / 1000);
       const from = to - duration * 24 * 60 * 60;
-
       // Fetch data from API
       const candlesResponse = await fetch(
         `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=${resolution}&from=${from}&to=${to}&token=${KEY}`

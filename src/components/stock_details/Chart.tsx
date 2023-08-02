@@ -8,41 +8,13 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { StockContext } from "../../context/StockContext";
-import { StocksContextType } from "../../utils/interfaces";
-
-const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="custom-tooltip bg-gray-700 p-2 rounded text-white">
-        <p className="label">{`Date : ${label}`}</p>
-        <p className="intro">{`Price : ${payload[0].value}`}</p>
-      </div>
-    );
-  }
-
-  return null;
-};
+import { StocksContextType, CustomTooltipProps } from "../../utils/interfaces";
 
 const Chart = () => {
   const { stock, ranges, selectedRange, setSelectedRange } = useContext(
     StockContext
   ) as StocksContextType;
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  const calculateInterval = (selectedRange, dataLength) => {
-    switch (selectedRange) {
-      case "1D":
-        return Math.floor(dataLength / 24);
-      case "1W":
-        return Math.floor(dataLength / 7);
-      case "1M":
-        return Math.floor(dataLength / 4);
-      case "1Y":
-        return Math.floor(dataLength / 12);
-      default:
-        return 0;
-    }
-  };
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -54,6 +26,55 @@ const Chart = () => {
 
   const handleRangeChange = (range: string) => {
     setSelectedRange(range);
+  };
+
+  const dateFormatter = (timestamp: string) => {
+    if (selectedRange === "1Y") {
+      return timestamp.split(" ")[0];
+    } else if (selectedRange === "1M") {
+      return timestamp
+        .split(" ")[1]
+        .slice(0, timestamp.split(" ")[1].length - 1);
+    } else if (selectedRange === "1W") {
+      return timestamp
+        .split(" ")[1]
+        .slice(0, timestamp.split(" ")[1].length - 1);
+    } else if (selectedRange === "1D") {
+      return timestamp.split(" ")[4].split(":")[0];
+    }
+    return "";
+  };
+
+  const renderCustomTooltip: React.FC<CustomTooltipProps> = ({
+    active,
+    payload,
+    label,
+  }) => {
+    if (active && payload && payload.length) {
+      const date = label;
+      const price = payload[0].value;
+
+      return (
+        <div
+          style={{
+            backgroundColor: "#f5f5f5",
+            padding: "10px",
+            border: "1px solid #ccc",
+          }}
+        >
+          {/* Black text for the date */}
+          <p
+            style={{ color: "black", marginBottom: "5px" }}
+          >{`Date: ${date}`}</p>
+          {/* Purple text for the price */}
+          <p
+            style={{ color: "purple", marginBottom: "0" }}
+          >{`Price: ${price}`}</p>
+        </div>
+      );
+    }
+
+    return null;
   };
 
   // Determine the color of the graph based on the opening and current prices
@@ -93,9 +114,7 @@ const Chart = () => {
               <stop offset="95%" stopColor={graphColor} stopOpacity={0.2} />
             </linearGradient>
           </defs>
-
-          <XAxis dataKey="date" interval={calculateInterval} />
-
+          <XAxis dataKey="date" tickFormatter={dateFormatter} interval={30} />
           <YAxis
             type="number"
             domain={[
@@ -104,9 +123,7 @@ const Chart = () => {
             ]}
             orientation="right"
           />
-
-          <Tooltip content={<CustomTooltip />} />
-
+          <Tooltip content={renderCustomTooltip} />
           <Area
             type="monotone"
             dataKey="price"
