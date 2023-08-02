@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import StockListItem from "./StockListItem";
 import { StockContext } from "../../context/StockContext";
 import { StocksContextType } from "../../utils/interfaces";
-import { Reorder } from "framer-motion";
+import { Reorder, motion } from "framer-motion";
 
 interface StockItem {
   symbol: string;
@@ -24,15 +24,14 @@ const StockList: React.FC = () => {
   if (!favoriteStocks) return null;
 
   return (
-    <Reorder.Group values={favoriteStocks || []} onReorder={setFavoriteStocks}>
+    <Reorder.Group
+      values={favoriteStocks || []}
+      onReorder={setFavoriteStocks}
+      layoutScroll
+      axis="y"
+    >
       {favoriteStocks?.map((stock: StockItem) => (
-        <Reorder.Item
-          key={stock.symbol}
-          value={stock}
-          className={`border-gray-500 cursor-pointer text-sm h-full px-2 ${
-            stock.symbol === symbol ? "bg-gray-700 rounded-md" : null
-          }`}
-        >
+        <Reorder.Item key={stock.symbol} value={stock}>
           <StockListItem symbol={stock.symbol} price={stock.quote.c} />
         </Reorder.Item>
       ))}
