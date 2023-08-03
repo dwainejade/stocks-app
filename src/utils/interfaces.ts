@@ -41,7 +41,7 @@ export interface companySymbols {
   type: string;
 }
 
-interface NewsItem {
+export interface NewsItem {
   category: string;
   datetime: number;
   headline: string;
