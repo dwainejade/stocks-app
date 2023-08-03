@@ -24,11 +24,31 @@ const StockSearch = () => {
 
   const searchLocalCompanies = (query: string) => {
     const lowerCaseQuery = query.toLowerCase();
-    return companyStocks.filter(
+    const companies = companyStocks.filter(
       (company: companySymbols) =>
         company.symbol.toLowerCase().includes(lowerCaseQuery) ||
         company.description.toLowerCase().includes(lowerCaseQuery)
     );
+
+    // Separate exact matches from partial matches
+    const exactMatches = companies.filter(
+      (company: companySymbols) =>
+        company.symbol.toLowerCase() === lowerCaseQuery ||
+        company.description.toLowerCase() === lowerCaseQuery
+    );
+
+    const firstWordMatches = companies.filter(
+      (company: companySymbols) =>
+        company.description.toLowerCase().split(" ")[0] === lowerCaseQuery
+    );
+
+    const partialMatches = companies.filter(
+      (company: companySymbols) =>
+        !exactMatches.includes(company) && !firstWordMatches.includes(company)
+    );
+
+    // Return exact matches first, followed by first word matches and then partial matches
+    return [...exactMatches, ...firstWordMatches, ...partialMatches];
   };
 
   const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
