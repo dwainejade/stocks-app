@@ -22,19 +22,6 @@ export interface SearchResult {
   type: string;
 }
 
-export interface StocksContextType {
-  stock: StockItem | null;
-  getStock: (name?: string) => void;
-  symbol: string;
-  setSymbol: (symbol: string) => void;
-  favoriteStocks: StockItem[];
-  setFavoriteStocks: (stocks: StockItem[]) => void;
-  ranges: string[];
-  selectedRange: string;
-  setSelectedRange: (selectedRange: string) => void;
-  searchStock: (query: string) => Promise<SearchResult[]>;
-}
-
 export interface CustomTooltipProps {
   active?: boolean;
   payload?: TooltipPayload[];
@@ -52,4 +39,31 @@ export interface companySymbols {
   symbol: string;
   symbol2: string;
   type: string;
+}
+
+interface NewsItem {
+  category: string;
+  datetime: number;
+  headline: string;
+  id: string;
+  image: string;
+  related: string;
+  source: string;
+  summary: string;
+  url: string;
+}
+
+export interface StocksContextType {
+  stock: StockItem | null;
+  getStock: (name?: string) => void;
+  symbol: string;
+  setSymbol: (symbol: string) => void;
+  favoriteStocks: StockItem[];
+  setFavoriteStocks: (stocks: StockItem[]) => void;
+  ranges: string[];
+  selectedRange: string;
+  setSelectedRange: (selectedRange: string) => void;
+  searchStock: (query: string) => Promise<SearchResult[]>;
+  news: NewsItem[];
+  getNews: (symbol: string, from: string, to: string) => void;
 }
