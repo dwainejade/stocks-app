@@ -112,9 +112,9 @@ const StockSearch = () => {
       {inputValue && searchResults && (
         <div className="absolute w-full max-h-[500px] mt-3 rounded-md shadow-lg overflow-y-auto bg-gray-900 px-2 hover:cursor-pointer">
           {isLoading ? (
-            <p>Loading...</p>
+            <p className="p-4 min h-14">Loading...</p>
           ) : error ? (
-            <p>Error: {error}</p>
+            <p className="py-4 min h-14">Error: {error}</p>
           ) : (
             searchResults?.map((result, index) => (
               <div
