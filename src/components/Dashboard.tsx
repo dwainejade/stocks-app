@@ -6,6 +6,7 @@ import Search from "./Search";
 import StockInfo from "./stock_details/StockInfo";
 import { StockContext } from "../context/StockContext";
 import { StocksContextType } from "../utils/interfaces";
+import NewsList from "./news/NewsList";
 
 const StockDashboard: React.FC = () => {
   const { symbol, favoriteStocks } = useContext(
@@ -31,7 +32,10 @@ const StockDashboard: React.FC = () => {
             <DetailsHeader />
             {symbol && <Chart />}
             <StockInfo />
-            {/* Stock News */}
+
+            <div className="mt-20">
+              <NewsList />
+            </div>
           </div>
         ) : (
           <div className="max-w-[900px] flex flex-col h-2/4 items-center justify-center text-3xl">
