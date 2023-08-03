@@ -101,7 +101,7 @@ const Chart = () => {
           ))}
       </div>
       <ResponsiveContainer
-        width={windowWidth - 450 > 800 ? 800 : windowWidth - 450}
+        width={windowWidth - 330 > 800 ? 900 : windowWidth - 330}
         height={250}
       >
         <AreaChart
