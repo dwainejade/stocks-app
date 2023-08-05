@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StockItem, StocksContextType } from "../utils/interfaces";
+import { StockItem, StocksContextType, NewsItem } from "../utils/interfaces";
 import { ObjectToArray } from "../utils/helpers";
 import localforage from "localforage";
 
@@ -13,15 +13,16 @@ const StockProvider: React.FC = ({ children }) => {
   const favoriteSymbols: string[] = [];
   const ranges: string[] = ["1D", "1W", "1M", "1Y"];
   const [selectedRange, setSelectedRange] = React.useState<string>("1D");
+  const [news, setNews] = React.useState<NewsItem[]>([]);
 
   const getFavoriteStocks = async () => {
-    const stocks = [];
+    const stocks: StockItem[] = [];
     for (const symbol of favoriteSymbols) {
       const response = await fetch(
         `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${KEY}`
       );
       const quote = await response.json();
-      stocks.push({ symbol, quote });
+      stocks.push({ symbol, quote, prices: [], lastUpdated: Date.now() });
     }
     setFavoriteStocks(stocks);
     await localforage.setItem("favoriteStocks", stocks);
@@ -106,6 +107,20 @@ const StockProvider: React.FC = ({ children }) => {
       return error;
     }
   };
+
+  const getNews = async (symbol: string, from: string, to: string) => {
+    try {
+      const response = await fetch(
+        `https://finnhub.io/api/v1/company-news?symbol=${symbol}&from=${from}&to=${to}&token=${KEY}`
+      );
+      const data = await response.json();
+      setNews(data);
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+
   React.useEffect(() => {
     getStock();
   }, [symbol, selectedRange]);
@@ -113,6 +128,17 @@ const StockProvider: React.FC = ({ children }) => {
   React.useEffect(() => {
     getFavoriteStocks();
   }, []);
+
+  React.useEffect(() => {
+    if (symbol) {
+      const today = new Date();
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setMonth(today.getMonth() - 1);
+      const fromDate = oneMonthAgo.toISOString().split("T")[0];
+      const toDate = today.toISOString().split("T")[0];
+      getNews(symbol, fromDate, toDate);
+    }
+  }, [symbol]);
 
   const searchStock = async (query) => {
     try {
@@ -140,6 +166,8 @@ const StockProvider: React.FC = ({ children }) => {
         selectedRange,
         setSelectedRange,
         searchStock,
+        news,
+        getNews,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import { TooltipPayload } from 'recharts';
+import { TooltipPayload } from "recharts";
 export interface StockItem {
   symbol: string;
   quote: {
@@ -22,6 +22,37 @@ export interface SearchResult {
   type: string;
 }
 
+export interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipPayload[];
+  label?: string;
+}
+
+export interface companySymbols {
+  currency: string;
+  description: string;
+  displaySymbol: string;
+  figi: string;
+  isin: string;
+  mic: string;
+  shareClassFIGI: string;
+  symbol: string;
+  symbol2: string;
+  type: string;
+}
+
+export interface NewsItem {
+  category: string;
+  datetime: number;
+  headline: string;
+  id: string;
+  image: string;
+  related: string;
+  source: string;
+  summary: string;
+  url: string;
+}
+
 export interface StocksContextType {
   stock: StockItem | null;
   getStock: (name?: string) => void;
@@ -33,10 +64,6 @@ export interface StocksContextType {
   selectedRange: string;
   setSelectedRange: (selectedRange: string) => void;
   searchStock: (query: string) => Promise<SearchResult[]>;
-}
-
-export interface CustomTooltipProps {
-  active?: boolean;
-  payload?: TooltipPayload[];
-  label?: string;
+  news: NewsItem[];
+  getNews: (symbol: string, from: string, to: string) => void;
 }
