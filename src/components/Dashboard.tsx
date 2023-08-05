@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import StockList from "./stock_list/StockList";
 import DetailsHeader from "./stock_details/DetailsHeader";
@@ -13,9 +13,21 @@ const StockDashboard: React.FC = () => {
   const { symbol, favoriteStocks, fetchingNews } = useContext(
     StockContext
   ) as StocksContextType;
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  }, [symbol]);
 
   return (
-    <div className="flex h-screen w-screen bg-gray-800 text-gray-50 overflow-none">
+    <div
+      className="flex h-screen w-screen bg-gray-800 text-gray-50 overflow-none"
+      ref={scrollRef}
+    >
       {/* Left side with list of stocks */}
       <div className="w-[330px] flex-shrink-0 h-full flex flex-col bg-grey-100">
         <div className="border-b-2 border-gray-600 p-3 bg-gray-800">
