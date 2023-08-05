@@ -64,7 +64,7 @@ const StockProvider: React.FC = ({ children }) => {
         setStock(storedStock);
         return;
       } else {
-        console.log("Fetching from API");
+        console.log("Fetching Data from API");
       }
 
       // Calculate from and to timestamps based on the selected range
@@ -112,10 +112,29 @@ const StockProvider: React.FC = ({ children }) => {
   const getNews = async (symbol: string, from: string, to: string) => {
     setFetchingNews(true);
     try {
+      // Create a key using both symbol, from and to dates
+      const key = `${symbol}_${from}_${to}`;
+
+      // Check if data in localforage is less than an hour old
+      const storedData = await localforage.getItem<{
+        timestamp: number;
+        news: NewsItem[];
+      }>(key);
+      if (storedData && Date.now() - storedData.timestamp < 60 * 60 * 1000) {
+        setNews(storedData.news);
+        return;
+      } else {
+        console.log("Fetching news from API");
+      }
+
       const response = await fetch(
         `https://finnhub.io/api/v1/company-news?symbol=${symbol}&from=${from}&to=${to}&token=${KEY}`
       );
       const data = await response.json();
+
+      // Store data in localforage with the current timestamp
+      await localforage.setItem(key, { timestamp: Date.now(), news: data });
+
       setNews(data);
     } catch (error) {
       console.log(error);
