@@ -16,18 +16,13 @@ const StockDashboard: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "smooth",
-    });
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({ top: 0, behavior: "auto" });
+    }
   }, [symbol]);
 
   return (
-    <div
-      className="flex h-screen w-screen bg-gray-800 text-gray-50 overflow-none"
-      ref={scrollRef}
-    >
+    <div className="flex h-screen w-screen bg-gray-800 text-gray-50 overflow-none">
       {/* Left side with list of stocks */}
       <div className="w-[330px] flex-shrink-0 h-full flex flex-col bg-grey-100">
         <div className="border-b-2 border-gray-600 p-3 bg-gray-800">
@@ -39,7 +34,10 @@ const StockDashboard: React.FC = () => {
       </div>
 
       {/* Right side with chart and stock details */}
-      <div className="flex-grow flex justify-center items-start bg-gray-900 text-gray-50 p-5 overflow-y-auto">
+      <div
+        className="flex-grow flex justify-center items-start bg-gray-900 text-gray-50 p-5 overflow-y-auto"
+        ref={scrollRef}
+      >
         {favoriteStocks.length > 0 || symbol ? (
           <div className="max-w-[900px] flex flex-col items-center justify-center">
             <DetailsHeader />
