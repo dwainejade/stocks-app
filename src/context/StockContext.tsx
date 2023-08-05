@@ -163,7 +163,7 @@ const StockProvider: React.FC = ({ children }) => {
     }
   }, [symbol]);
 
-  const searchStock = async (query) => {
+  const searchStock = async (query: string) => {
     try {
       const response = await fetch(
         `https://finnhub.io/api/v1/search?q=${query}&token=${KEY}`
