@@ -66,4 +66,5 @@ export interface StocksContextType {
   searchStock: (query: string) => Promise<SearchResult[]>;
   news: NewsItem[];
   getNews: (symbol: string, from: string, to: string) => void;
+  fetchingNews: boolean;
 }

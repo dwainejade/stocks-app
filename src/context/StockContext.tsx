@@ -14,6 +14,7 @@ const StockProvider: React.FC = ({ children }) => {
   const ranges: string[] = ["1D", "1W", "1M", "1Y"];
   const [selectedRange, setSelectedRange] = React.useState<string>("1D");
   const [news, setNews] = React.useState<NewsItem[]>([]);
+  const [fetchingNews, setFetchingNews] = React.useState<boolean>(false);
 
   const getFavoriteStocks = async () => {
     const stocks: StockItem[] = [];
@@ -109,6 +110,7 @@ const StockProvider: React.FC = ({ children }) => {
   };
 
   const getNews = async (symbol: string, from: string, to: string) => {
+    setFetchingNews(true);
     try {
       const response = await fetch(
         `https://finnhub.io/api/v1/company-news?symbol=${symbol}&from=${from}&to=${to}&token=${KEY}`
@@ -118,6 +120,8 @@ const StockProvider: React.FC = ({ children }) => {
     } catch (error) {
       console.log(error);
       return error;
+    } finally {
+      setFetchingNews(false);
     }
   };
 
@@ -168,6 +172,7 @@ const StockProvider: React.FC = ({ children }) => {
         searchStock,
         news,
         getNews,
+        fetchingNews,
       }}
     >
       {children}
