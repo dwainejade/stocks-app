@@ -10,13 +10,16 @@ const StockProvider: React.FC = ({ children }) => {
   const [stock, setStock] = React.useState<StockItem | null>(null);
   const [symbol, setSymbol] = React.useState<string>("");
   const [favoriteStocks, setFavoriteStocks] = React.useState<StockItem[]>([]);
-  const favoriteSymbols: string[] = [];
   const ranges: string[] = ["1D", "1W", "1M", "1Y"];
   const [selectedRange, setSelectedRange] = React.useState<string>("1D");
   const [news, setNews] = React.useState<NewsItem[]>([]);
   const [fetchingNews, setFetchingNews] = React.useState<boolean>(false);
 
   const getFavoriteStocks = async () => {
+    const favoriteSymbols = favoriteStocks.map((stock) => stock.symbol);
+    if (favoriteSymbols.length === 0) {
+      return;
+    }
     const stocks: StockItem[] = [];
     for (const symbol of favoriteSymbols) {
       const response = await fetch(
