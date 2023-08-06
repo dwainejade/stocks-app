@@ -1,5 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
+import Search from '../Search';
 import {
+  LineChart,
+  Line,
   Area,
   AreaChart,
   Tooltip,
@@ -8,13 +11,25 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { StockContext } from '../../context/StockContext';
-import { StocksContextType, CustomTooltipProps } from '../../utils/interfaces';
+import {
+  StocksContextType,
+  CompareStocksType,
+  CustomTooltipProps,
+  StockItem,
+} from '../../utils/interfaces';
 
-const Chart = () => {
-  const { stock, ranges, selectedRange, setSelectedRange } = useContext(
-    StockContext
-  ) as StocksContextType;
+const MultiStockChart = () => {
+  const {
+    stock,
+    ranges,
+    selectedRange,
+    setSelectedRange,
+    compareStocks,
+    comparingStocksSymbols,
+  } = useContext(StockContext) as StocksContextType;
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [showFavorites, setShowFavorites] = useState(false);
+  console.log('data', compareStocks, comparingStocksSymbols);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -67,9 +82,11 @@ const Chart = () => {
             style={{ color: 'black', marginBottom: '5px' }}
           >{`Date: ${date}`}</p>
           {/* Purple text for the price */}
-          <p
-            style={{ color: 'purple', marginBottom: '0' }}
-          >{`Price: ${price}`}</p>
+          {comparingStocksSymbols.map((option, i) => (
+            <p
+              style={{ color: 'black', marginBottom: '0' }}
+            >{`${option}: ${price}`}</p>
+          ))}
         </div>
       );
     }
@@ -84,10 +101,24 @@ const Chart = () => {
       ? '#018E42'
       : '#BB0A21';
 
+  const lineColors: string[] = ['#0079FF', '#F6FA70', '#FF0060', '#00DFA2'];
+
   return (
     <div>
+      {compareStocks.length > 0 && (
+        <div className="mb-2">
+          <button
+            className={`px-2 py-1 text-white rounded focus:ring-opacity-50 border border-sky-500`}
+            onClick={() => setShowFavorites(!showFavorites)}
+          >
+            Comparison +
+          </button>
+
+          {showFavorites && <Search inChart={true} />}
+        </div>
+      )}
       <div className="flex justify-between">
-        {stock &&
+        {compareStocks.length > 0 &&
           ranges.map((range) => (
             <button
               key={range}
@@ -105,14 +136,39 @@ const Chart = () => {
         height={250}
       >
         <AreaChart
-          data={stock?.prices}
+          data={compareStocks}
           margin={{ top: 10, right: 0, left: 0, bottom: 0 }}
         >
           <defs>
-            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={graphColor} stopOpacity={1} />
-              <stop offset="95%" stopColor={graphColor} stopOpacity={0.2} />
-            </linearGradient>
+            {comparingStocksSymbols.map((option, i) => (
+              <linearGradient
+                id={`color${option}`}
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+                key={i}
+              >
+                <stop
+                  offset="5%"
+                  stopColor={
+                    comparingStocksSymbols.length === 1
+                      ? graphColor
+                      : lineColors[i]
+                  }
+                  stopOpacity={1}
+                />
+                <stop
+                  offset="95%"
+                  stopColor={
+                    comparingStocksSymbols.length === 1
+                      ? graphColor
+                      : lineColors[i]
+                  }
+                  stopOpacity={0.2}
+                />
+              </linearGradient>
+            ))}
           </defs>
           <XAxis dataKey="date" tickFormatter={dateFormatter} interval={30} />
           <YAxis
@@ -124,18 +180,26 @@ const Chart = () => {
             orientation="right"
           />
           <Tooltip content={renderCustomTooltip} />
-          <Area
-            type="monotone"
-            dataKey="price"
-            stroke={graphColor}
-            strokeWidth={1.5}
-            fillOpacity={0.3}
-            fill="url(#colorUv)"
-          />
+          {comparingStocksSymbols.length &&
+            comparingStocksSymbols.map((symbol, i) => (
+              <Area
+                key={i}
+                type="monotone"
+                dataKey={symbol}
+                stroke={
+                  comparingStocksSymbols.length === 1
+                    ? graphColor
+                    : lineColors[i]
+                }
+                strokeWidth={1}
+                fillOpacity={0.3}
+                fill={`url(#color${symbol})`}
+              />
+            ))}
         </AreaChart>
       </ResponsiveContainer>
     </div>
   );
 };
 
-export default Chart;
+export default MultiStockChart;

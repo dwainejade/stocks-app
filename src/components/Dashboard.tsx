@@ -1,9 +1,10 @@
-import React from "react";
-import StockList from "./stock_list/StockList";
-import DetailsHeader from "./stock_details/DetailsHeader";
-import Chart from "./stock_details/Chart";
-import Search from "./Search";
-import StockInfo from "./stock_details/StockInfo";
+import React from 'react';
+import StockList from './stock_list/StockList';
+import DetailsHeader from './stock_details/DetailsHeader';
+import Chart from './stock_details/Chart';
+import MultiStockChart from './stock_details/MultiStockChart';
+import Search from './Search';
+import StockInfo from './stock_details/StockInfo';
 
 const StockDashboard: React.FC = () => {
   return (
@@ -25,6 +26,7 @@ const StockDashboard: React.FC = () => {
           <Chart />
           <StockInfo />
           {/* Stock News */}
+          <MultiStockChart />
         </div>
       </div>
     </div>

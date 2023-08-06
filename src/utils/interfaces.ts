@@ -15,6 +15,11 @@ export interface StockItem {
   lastUpdated: number;
 }
 
+export interface CompareStocksType {
+  date: string;
+  [symbol: string]: number | string;
+}
+
 export interface SearchResult {
   description: string;
   displaySymbol: string;
@@ -29,10 +34,14 @@ export interface StocksContextType {
   setSymbol: (symbol: string) => void;
   favoriteStocks: StockItem[];
   setFavoriteStocks: (stocks: StockItem[]) => void;
+  compareStocks: CompareStocksType[];
+  setCompareStocks: (stocks: CompareStocksType[]) => void;
+  comparingStocksSymbols: string[];
   ranges: string[];
   selectedRange: string;
   setSelectedRange: (selectedRange: string) => void;
   searchStock: (query: string) => Promise<SearchResult[]>;
+  getCompareStocksInfo: () => void;
 }
 
 export interface CustomTooltipProps {

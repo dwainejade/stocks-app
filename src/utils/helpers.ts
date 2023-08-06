@@ -8,7 +8,7 @@ export const getUnixTimestamps = (date) => {
   return { today, oneYearAgo };
 };
 
-export const ObjectToArray = (obj) => {
+export const objectToArray = (obj) => {
   const resultArray = [];
 
   // Iterate through the arrays 'c' and 't'
@@ -27,13 +27,33 @@ export const ObjectToArray = (obj) => {
 const unixTimestampToYearMonthDayString = (unixTimestamp: number) => {
   const date = new Date(unixTimestamp * 1000); // Multiply by 1000 to convert to milliseconds
   const options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    timeZoneName: "short",
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZoneName: 'short',
   };
   return date.toLocaleString(undefined, options);
+};
+
+export const compareNewStock = (compareStocksArray, newStock) => {
+  if (compareStocksArray.length === 0) {
+    const stockInfo = newStock.prices.map(({ price, date }) => {
+      return {
+        [newStock.symbol]: price,
+        date: date,
+      };
+    });
+
+    return stockInfo;
+  } else {
+    const compareStocksResult = compareStocksArray.map((compareData, i) => {
+      compareData[newStock['symbol']] = newStock.prices[i].price;
+      return compareData;
+    });
+
+    return compareStocksResult;
+  }
 };
