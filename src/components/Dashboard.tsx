@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import StockList from "./stock_list/StockList";
 import DetailsHeader from "./stock_details/DetailsHeader";
 import Chart from "./stock_details/Chart";
@@ -9,9 +10,16 @@ import { StocksContextType } from "../utils/interfaces";
 import NewsList from "./news/NewsList";
 
 const StockDashboard: React.FC = () => {
-  const { symbol, favoriteStocks } = useContext(
+  const { symbol, favoriteStocks, fetchingNews } = useContext(
     StockContext
   ) as StocksContextType;
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({ top: 0, behavior: "auto" });
+    }
+  }, [symbol]);
 
   return (
     <div className="flex h-screen w-screen bg-gray-800 text-gray-50 overflow-none">
@@ -26,16 +34,31 @@ const StockDashboard: React.FC = () => {
       </div>
 
       {/* Right side with chart and stock details */}
-      <div className="flex-grow flex justify-center items-start bg-gray-900 text-gray-50 p-5 overflow-y-auto">
+      <div
+        className="flex-grow flex justify-center items-start bg-gray-900 text-gray-50 p-5 overflow-y-auto"
+        ref={scrollRef}
+      >
         {favoriteStocks.length > 0 || symbol ? (
           <div className="max-w-[900px] flex flex-col items-center justify-center">
             <DetailsHeader />
+
             {symbol && <Chart />}
+
             <StockInfo />
 
-            <div className="mt-20">
-              <NewsList />
-            </div>
+            <AnimatePresence>
+              {!fetchingNews && (
+                <motion.div
+                  className="mt-20"
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 }}
+                  key={symbol}
+                >
+                  <NewsList />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         ) : (
           <div className="max-w-[900px] flex flex-col h-2/4 items-center justify-center text-3xl">
