@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { StockContext } from '../context/StockContext';
 import { MagnifyingGlassIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import companyStocks from '../constants/companySymbols.json';
+import { companySymbols } from '../utils/interfaces';
 
 interface SearchResult {
   symbol: string;
@@ -26,11 +27,31 @@ const StockSearch = ({ inChart }) => {
 
   const searchLocalCompanies = (query: string) => {
     const lowerCaseQuery = query.toLowerCase();
-    return companyStocks.filter(
-      (company) =>
+    const companies = companyStocks.filter(
+      (company: companySymbols) =>
         company.symbol.toLowerCase().includes(lowerCaseQuery) ||
         company.description.toLowerCase().includes(lowerCaseQuery)
     );
+
+    // Separate exact matches from partial matches
+    const exactMatches = companies.filter(
+      (company: companySymbols) =>
+        company.symbol.toLowerCase() === lowerCaseQuery ||
+        company.description.toLowerCase() === lowerCaseQuery
+    );
+
+    const firstWordMatches = companies.filter(
+      (company: companySymbols) =>
+        company.description.toLowerCase().split(' ')[0] === lowerCaseQuery
+    );
+
+    const partialMatches = companies.filter(
+      (company: companySymbols) =>
+        !exactMatches.includes(company) && !firstWordMatches.includes(company)
+    );
+
+    // Return exact matches first, followed by first word matches and then partial matches
+    return [...exactMatches, ...firstWordMatches, ...partialMatches];
   };
 
   const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -102,9 +123,9 @@ const StockSearch = ({ inChart }) => {
           } absolute w-full max-h-[500px] mt-3 rounded-md shadow-lg overflow-y-auto bg-gray-900 px-2 hover:cursor-pointer`}
         >
           {isLoading ? (
-            <p>Loading...</p>
+            <p className="p-4 min h-14">Loading...</p>
           ) : error ? (
-            <p>Error: {error}</p>
+            <p className="py-4 min h-14">Error: {error}</p>
           ) : (
             searchResults?.map((result, index) => (
               <div

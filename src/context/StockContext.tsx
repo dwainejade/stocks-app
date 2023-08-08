@@ -3,6 +3,7 @@ import {
   StockItem,
   CompareStocksType,
   StocksContextType,
+  NewsItem,
 } from '../utils/interfaces';
 import { objectToArray, compareNewStock } from '../utils/helpers';
 import localforage from 'localforage';
@@ -17,6 +18,8 @@ const StockProvider: React.FC = ({ children }) => {
   const favoriteSymbols: string[] = [];
   const ranges: string[] = ['1D', '1W', '1M', '1Y'];
   const [selectedRange, setSelectedRange] = React.useState<string>('1Y');
+  const [news, setNews] = React.useState<NewsItem[]>([]);
+  const [fetchingNews, setFetchingNews] = React.useState<boolean>(false);
   const [compareStocks, setCompareStocks] = React.useState<
     CompareStocksType[] | []
   >([]);
@@ -25,13 +28,17 @@ const StockProvider: React.FC = ({ children }) => {
   >([]);
 
   const getFavoriteStocks = async () => {
-    const stocks = [];
+    const favoriteSymbols = favoriteStocks.map((stock) => stock.symbol);
+    if (favoriteSymbols.length === 0) {
+      return;
+    }
+    const stocks: StockItem[] = [];
     for (const symbol of favoriteSymbols) {
       const response = await fetch(
         `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${KEY}`
       );
       const quote = await response.json();
-      stocks.push({ symbol, quote });
+      stocks.push({ symbol, quote, prices: [], lastUpdated: Date.now() });
     }
     setFavoriteStocks(stocks);
     await localforage.setItem('favoriteStocks', stocks);
@@ -123,6 +130,42 @@ const StockProvider: React.FC = ({ children }) => {
       return error;
     }
   };
+
+  const getNews = async (symbol: string, from: string, to: string) => {
+    setFetchingNews(true);
+    try {
+      // Create a key using both symbol, from and to dates
+      const key = `${symbol}_${from}_${to}`;
+
+      // Check if data in localforage is less than an hour old
+      const storedData = await localforage.getItem<{
+        timestamp: number;
+        news: NewsItem[];
+      }>(key);
+      if (storedData && Date.now() - storedData.timestamp < 60 * 60 * 1000) {
+        setNews(storedData.news);
+        return;
+      } else {
+        console.log('Fetching news from API');
+      }
+
+      const response = await fetch(
+        `https://finnhub.io/api/v1/company-news?symbol=${symbol}&from=${from}&to=${to}&token=${KEY}`
+      );
+      const data = await response.json();
+
+      // Store data in localforage with the current timestamp
+      await localforage.setItem(key, { timestamp: Date.now(), news: data });
+
+      setNews(data);
+    } catch (error) {
+      console.log(error);
+      return error;
+    } finally {
+      setFetchingNews(false);
+    }
+  };
+
   React.useEffect(() => {
     getStock();
   }, [symbol, selectedRange]);
@@ -131,7 +174,18 @@ const StockProvider: React.FC = ({ children }) => {
     getFavoriteStocks();
   }, []);
 
-  const searchStock = async (query: string) => {
+  React.useEffect(() => {
+    if (symbol) {
+      const today = new Date();
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setMonth(today.getMonth() - 1);
+      const fromDate = oneMonthAgo.toISOString().split('T')[0];
+      const toDate = today.toISOString().split('T')[0];
+      getNews(symbol, fromDate, toDate);
+    }
+  }, [symbol]);
+
+  const searchStock = async (query) => {
     try {
       const response = await fetch(
         `https://finnhub.io/api/v1/search?q=${query}&token=${KEY}`
@@ -226,6 +280,9 @@ const StockProvider: React.FC = ({ children }) => {
         selectedRange,
         setSelectedRange,
         searchStock,
+        news,
+        getNews,
+        fetchingNews,
         compareStocks,
         setCompareStocks,
         comparingStocksSymbols,
