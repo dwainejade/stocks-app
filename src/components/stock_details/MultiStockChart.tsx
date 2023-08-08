@@ -1,8 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import Search from '../Search';
 import {
-  LineChart,
-  Line,
   Area,
   AreaChart,
   Tooltip,
@@ -11,12 +9,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { StockContext } from '../../context/StockContext';
-import {
-  StocksContextType,
-  CompareStocksType,
-  CustomTooltipProps,
-  StockItem,
-} from '../../utils/interfaces';
+import { StocksContextType, CustomTooltipProps } from '../../utils/interfaces';
 
 const MultiStockChart = () => {
   const {
@@ -26,6 +19,7 @@ const MultiStockChart = () => {
     setSelectedRange,
     compareStocks,
     comparingStocksSymbols,
+    removeComparisonStock,
   } = useContext(StockContext) as StocksContextType;
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [showFavorites, setShowFavorites] = useState(false);
@@ -84,6 +78,7 @@ const MultiStockChart = () => {
           {/* Purple text for the price */}
           {comparingStocksSymbols.map((option, i) => (
             <p
+              key={i}
               style={{ color: 'black', marginBottom: '0' }}
             >{`${option}: ${price}`}</p>
           ))}
@@ -108,11 +103,45 @@ const MultiStockChart = () => {
       {compareStocks.length > 0 && (
         <div className="mb-2">
           <button
-            className={`px-2 py-1 text-white rounded focus:ring-opacity-50 border border-sky-500`}
+            className={`px-2 py-1 mr-2 text-white rounded focus:ring-opacity-50 border border-sky-500`}
             onClick={() => setShowFavorites(!showFavorites)}
           >
             Comparison +
           </button>
+          {comparingStocksSymbols.length > 1 &&
+            comparingStocksSymbols.map((symbol: string, i: number) => (
+              <span
+                key={i}
+                id="badge-dismiss-default"
+                className="inline-flex items-center px-2 py-1 mr-2 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300"
+                onClick={() => removeComparisonStock(symbol)}
+              >
+                {symbol}
+                <button
+                  type="button"
+                  className="inline-flex items-center p-1 ml-2 text-sm text-blue-400 bg-transparent rounded-sm hover:bg-blue-200 hover:text-blue-900 dark:hover:bg-blue-800 dark:hover:text-blue-300"
+                  data-dismiss-target="#badge-dismiss-default"
+                  aria-label="Remove"
+                >
+                  <svg
+                    className="w-2 h-2"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                    />
+                  </svg>
+                  <span className="sr-only">Remove badge</span>
+                </button>
+              </span>
+            ))}
 
           {showFavorites && <Search inChart={true} />}
         </div>

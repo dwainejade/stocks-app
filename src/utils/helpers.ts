@@ -49,10 +49,12 @@ export const compareNewStock = (compareStocksArray, newStock) => {
 
     return stockInfo;
   } else {
-    const compareStocksResult = compareStocksArray.map((compareData, i) => {
-      compareData[newStock['symbol']] = newStock.prices[i].price;
-      return compareData;
-    });
+    const compareStocksResult = compareStocksArray.map(
+      (compareData, i: number) => {
+        compareData[newStock['symbol']] = newStock.prices[i].price;
+        return compareData;
+      }
+    );
 
     return compareStocksResult;
   }

@@ -41,7 +41,8 @@ export interface StocksContextType {
   selectedRange: string;
   setSelectedRange: (selectedRange: string) => void;
   searchStock: (query: string) => Promise<SearchResult[]>;
-  getCompareStocksInfo: () => void;
+  getCompareStocksInfo: (stockSymbols: string[]) => void;
+  removeComparisonStock: (stockSymbol: string) => void;
 }
 
 export interface CustomTooltipProps {

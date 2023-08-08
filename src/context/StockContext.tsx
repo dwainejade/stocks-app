@@ -205,6 +205,14 @@ const StockProvider: React.FC = ({ children }) => {
     }
   };
 
+  const removeComparisonStock = (symbol: string) => {
+    const remainingSymbols = [...comparingStocksSymbols].filter(
+      (stockSymbol) => stockSymbol !== symbol
+    );
+    setComparingStocksSymbols(remainingSymbols);
+    getCompareStocksInfo(remainingSymbols);
+  };
+
   return (
     <StockContext.Provider
       value={{
@@ -221,6 +229,7 @@ const StockProvider: React.FC = ({ children }) => {
         compareStocks,
         setCompareStocks,
         comparingStocksSymbols,
+        removeComparisonStock,
         getCompareStocksInfo,
       }}
     >
