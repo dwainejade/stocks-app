@@ -1,4 +1,4 @@
-import { TooltipPayload } from "recharts";
+import { TooltipPayload } from 'recharts';
 export interface StockItem {
   symbol: string;
   quote: {
@@ -13,6 +13,11 @@ export interface StockItem {
   };
   prices: { price: number; date: string }[];
   lastUpdated: number;
+}
+
+export interface CompareStocksType {
+  date: string;
+  [symbol: string]: number | string;
 }
 
 export interface SearchResult {
@@ -60,6 +65,9 @@ export interface StocksContextType {
   setSymbol: (symbol: string) => void;
   favoriteStocks: StockItem[];
   setFavoriteStocks: (stocks: StockItem[]) => void;
+  compareStocks: CompareStocksType[];
+  setCompareStocks: (stocks: CompareStocksType[]) => void;
+  comparingStocksSymbols: string[];
   ranges: string[];
   selectedRange: string;
   setSelectedRange: (selectedRange: string) => void;
@@ -67,4 +75,6 @@ export interface StocksContextType {
   news: NewsItem[];
   getNews: (symbol: string, from: string, to: string) => void;
   fetchingNews: boolean;
+  getCompareStocksInfo: (stockSymbols: string[]) => void;
+  removeComparisonStock: (stockSymbol: string) => void;
 }

@@ -1,19 +1,22 @@
-import { useContext, useState } from "react";
-import { StockContext } from "../context/StockContext";
-import { MagnifyingGlassIcon, XCircleIcon } from "@heroicons/react/24/solid";
-import companyStocks from "../constants/companySymbols.json";
-import { StocksContextType, companySymbols } from "../utils/interfaces";
+import { useContext, useState } from 'react';
+import { StockContext } from '../context/StockContext';
+import { MagnifyingGlassIcon, XCircleIcon } from '@heroicons/react/24/solid';
+import companyStocks from '../constants/companySymbols.json';
+import { companySymbols } from '../utils/interfaces';
 
 interface SearchResult {
   symbol: string;
   description: string;
 }
 
-const StockSearch = () => {
-  const { setSymbol, searchStock } = useContext(
-    StockContext
-  ) as StocksContextType;
-  const [inputValue, setInputValue] = useState("");
+const StockSearch = ({ inChart }) => {
+  const {
+    setSymbol,
+    searchStock,
+    comparingStocksSymbols,
+    getCompareStocksInfo,
+  } = useContext(StockContext);
+  const [inputValue, setInputValue] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -39,7 +42,7 @@ const StockSearch = () => {
 
     const firstWordMatches = companies.filter(
       (company: companySymbols) =>
-        company.description.toLowerCase().split(" ")[0] === lowerCaseQuery
+        company.description.toLowerCase().split(' ')[0] === lowerCaseQuery
     );
 
     const partialMatches = companies.filter(
@@ -66,7 +69,7 @@ const StockSearch = () => {
         // If no local results are found, fall back to the API search
         const results = await searchStock(inputValue);
         const filteredResults = results.result.filter(
-          (result) => result.type === "Common Stock"
+          (result) => result.type === 'Common Stock'
         );
         setSearchResults(filteredResults);
       }
@@ -78,8 +81,12 @@ const StockSearch = () => {
   };
 
   const handleSelectedResult = (symbol: string) => {
-    setSymbol(symbol);
-    setInputValue("");
+    if (inChart) {
+      getCompareStocksInfo([...comparingStocksSymbols, symbol]);
+    } else {
+      setSymbol(symbol);
+    }
+    setInputValue('');
     setSearchResults([]);
   };
 
@@ -103,14 +110,18 @@ const StockSearch = () => {
         {inputValue && (
           <span
             className="absolute right-0 pr-2 text-gray-400 cursor-pointer"
-            onClick={() => setInputValue("")}
+            onClick={() => setInputValue('')}
           >
             <XCircleIcon className="h-6 w-6 text-gray-400" />
           </span>
         )}
       </form>
       {inputValue && searchResults && (
-        <div className="absolute w-full max-h-[500px] mt-3 rounded-md shadow-lg overflow-y-auto bg-gray-900 px-2 hover:cursor-pointer">
+        <div
+          className={`${
+            inChart && 'z-10'
+          } absolute w-full max-h-[500px] mt-3 rounded-md shadow-lg overflow-y-auto bg-gray-900 px-2 hover:cursor-pointer`}
+        >
           {isLoading ? (
             <p className="p-4 min h-14">Loading...</p>
           ) : error ? (

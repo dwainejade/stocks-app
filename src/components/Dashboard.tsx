@@ -1,13 +1,14 @@
-import React, { useContext, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import StockList from "./stock_list/StockList";
-import DetailsHeader from "./stock_details/DetailsHeader";
-import Chart from "./stock_details/Chart";
-import Search from "./Search";
-import StockInfo from "./stock_details/StockInfo";
-import { StockContext } from "../context/StockContext";
-import { StocksContextType } from "../utils/interfaces";
-import NewsList from "./news/NewsList";
+import React, { useContext, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import StockList from './stock_list/StockList';
+import DetailsHeader from './stock_details/DetailsHeader';
+import MultiStockChart from './stock_details/MultiStockChart';
+import Chart from './stock_details/Chart';
+import Search from './Search';
+import StockInfo from './stock_details/StockInfo';
+import { StockContext } from '../context/StockContext';
+import { StocksContextType } from '../utils/interfaces';
+import NewsList from './news/NewsList';
 
 const StockDashboard: React.FC = () => {
   const { symbol, favoriteStocks, fetchingNews } = useContext(
@@ -17,7 +18,7 @@ const StockDashboard: React.FC = () => {
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTo({ top: 0, behavior: "auto" });
+      scrollRef.current.scrollTo({ top: 0, behavior: 'auto' });
     }
   }, [symbol]);
 
@@ -42,7 +43,7 @@ const StockDashboard: React.FC = () => {
           <div className="max-w-[900px] flex flex-col items-center justify-center">
             <DetailsHeader />
 
-            {symbol && <Chart />}
+            {symbol && <MultiStockChart />}
 
             <StockInfo />
 
