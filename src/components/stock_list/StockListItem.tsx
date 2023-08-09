@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
-import { StockContext } from "../../context/StockContext";
-import { StocksContextType } from "../../utils/interfaces";
+import React, { useContext } from 'react';
+import { StockContext } from '../../context/StockContext';
+import { StocksContextType } from '../../utils/interfaces';
 
 interface StockListItemProps {
   symbol: string;
@@ -18,8 +18,8 @@ const StockListItem: React.FC<StockListItemProps> = ({ symbol, price }) => {
 
   return (
     <div
-      className={`flex justify-between p-4 border-gray-500 rounded-md cursor-pointer text-sm h-full  ${
-        symbol === selectedSymbol ? "bg-gray-700" : "bg-gray-800"
+      className={`flex justify-between p-4 border-gray-500 rounded-md cursor-pointer text-sm h-full hover:bg-gray-600 ${
+        symbol === selectedSymbol ? 'bg-gray-700' : 'bg-gray-800'
       }`}
       onClick={handleClick}
     >

@@ -1,37 +1,55 @@
-import React, { useContext, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import StockList from "./stock_list/StockList";
-import DetailsHeader from "./stock_details/DetailsHeader";
-import Chart from "./stock_details/Chart";
-import Search from "./Search";
-import StockInfo from "./stock_details/StockInfo";
-import { StockContext } from "../context/StockContext";
-import { StocksContextType } from "../utils/interfaces";
-import NewsList from "./news/NewsList";
+import React, { useState, useContext, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import StockList from './stock_list/StockList';
+import MobileHeader from './MobileHeader';
+import DetailsHeader from './stock_details/DetailsHeader';
+import Chart from './stock_details/Chart';
+import Search from './Search';
+import StockInfo from './stock_details/StockInfo';
+import { StockContext } from '../context/StockContext';
+import { StocksContextType } from '../utils/interfaces';
+import NewsList from './news/NewsList';
 
 const StockDashboard: React.FC = () => {
   const { symbol, favoriteStocks, fetchingNews } = useContext(
     StockContext
   ) as StocksContextType;
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+
+    // Clean up the event listener on unmount
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTo({ top: 0, behavior: "auto" });
+      scrollRef.current.scrollTo({ top: 0, behavior: 'auto' });
     }
   }, [symbol]);
 
   return (
-    <div className="flex h-screen w-screen bg-gray-800 text-gray-50 overflow-none">
+    <div
+      className={`${
+        windowWidth > 425 ? 'flex' : 'flex-col'
+      } h-screen w-screen bg-gray-800 text-gray-50 overflow-x-hidden`}
+    >
       {/* Left side with list of stocks */}
-      <div className="w-[330px] flex-shrink-0 h-full flex flex-col bg-grey-100">
-        <div className="border-b-2 border-gray-600 p-3 bg-gray-800">
-          <Search />
+      {windowWidth > 425 ? (
+        <div className="w-[330px] flex-shrink-0 h-full flex flex-col bg-grey-100">
+          <div className="border-b-2 border-gray-600 p-3 bg-gray-800">
+            <Search />
+          </div>
+          <div className="p-3 overflow-y-auto flex-grow">
+            <StockList />
+          </div>
         </div>
-        <div className="p-3 overflow-y-auto flex-grow">
-          <StockList />
-        </div>
-      </div>
+      ) : (
+        <MobileHeader />
+      )}
 
       {/* Right side with chart and stock details */}
       <div
