@@ -8,7 +8,6 @@ const MobileHeader = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleMenuOpen = () => {
-    console.log('open', isOpen);
     setIsOpen(!isOpen);
   };
 
